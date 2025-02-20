@@ -9,7 +9,7 @@ const Login = () => {
   } = useForm<Users>();
 
   return (
-    <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-200">
+    <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-gray-200 dark:bg-gray-600 dark:shadow-gray-600">
       <h2 className="text-3xl font-bold "> Halaman Login 🚀</h2>
       <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit((data) => console.log(data))}>
         <input
