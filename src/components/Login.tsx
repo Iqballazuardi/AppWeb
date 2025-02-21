@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Users } from "../features/UsersSlice";
+import { Users } from "../features/UserSlice";
 
 const Login = () => {
   const {
