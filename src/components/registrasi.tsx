@@ -3,25 +3,30 @@ import { register, User } from "../features/UserSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../store";
-import { useState } from "react";
+// import { useState } from "react";
 // import { useCallback } from "react";
 
 const Register = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("user");
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [role, setRole] = useState("");
+  // const dispatch = useDispatch();
+
+  // const data = [username, password, setPassword, role];
+
+  // const navigate = useNavigate();
   const {
     register: formRegister,
+    handleSubmit,
     formState: { errors },
   } = useForm<User>();
   const dispatch = useDispatch<AppDispatch>();
 
-  const userRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(register({ username, email, password, role }));
+  const userRegister = async (data: User) => {
+    await dispatch(register(data));
+
     navigate("/login");
   };
 
@@ -39,7 +44,7 @@ const Register = () => {
   return (
     <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
       <h2 className="text-3xl font-bold dark:text-zinc-200"> Halaman Registrasis</h2>
-      <form className="w-full px-4 mb-8 mt-5" onSubmit={userRegister}>
+      <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit(userRegister)}>
         <input
           {...formRegister("email", {
             required: "email wajib diisi",
@@ -47,8 +52,8 @@ const Register = () => {
           type="email"
           placeholder="Email"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          // value={username}
+          // onChange={(e) => setUsername(e.target.value)}
         />
         {errors.email && <p>{errors.email.message}</p>}
         <input
@@ -57,8 +62,8 @@ const Register = () => {
           })}
           type="text"
           placeholder="Username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          // value={email}
+          // onChange={(e) => setEmail(e.target.value)}
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
         <input
@@ -67,8 +72,8 @@ const Register = () => {
             minLength: { value: 4, message: "Minimal 4 karakter" },
           })}
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          // value={password}
+          // onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
@@ -78,8 +83,8 @@ const Register = () => {
             minLength: { value: 4, message: "Minimal 4 karakter" },
           })}
           type="text"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+          // value={role}
+          // onChange={(e) => setRole(e.target.value)}
           placeholder="Penulis | Pembaca"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />

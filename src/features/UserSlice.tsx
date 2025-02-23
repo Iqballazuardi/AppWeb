@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../services/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface User {
@@ -13,16 +13,15 @@ export interface AuthUsers {
   currentUser: User | null;
 }
 
-// export const login = createAsyncThunk("user/getUser ", async () => {
-//   const users = JSON.parse(localStorage.getItem("users") || "[]");
+export const login = createAsyncThunk("/users", async () => {
+  const response = await axios.get(`/users`);
+  return response.data;
+});
 
-//   const response = await axios.get("http://localhost:3000/users");
-//   return response.data;
-// });
-
-export const register = createAsyncThunk<User, User, { rejectValue: string }>("/register", async (userData: { username: string; email: string; password: string; role: string }, { rejectWithValue }) => {
+export const register = createAsyncThunk<User, User, { rejectValue: string }>("/registrasi", async (userData: { username: string; email: string; password: string; role: string }, { rejectWithValue }) => {
   try {
-    const response = await axios.post("http://localhost:3000/users", userData);
+    const response = await axios.post("/registrasi", userData);
+    console.log(response);
     return response.data;
   } catch {
     return rejectWithValue("Failed to register user");

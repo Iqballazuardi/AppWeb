@@ -1,17 +1,33 @@
 import { useForm } from "react-hook-form";
-import { Users } from "../features/UserSlice";
+import { User } from "../features/UserSlice";
+import { login } from "../features/UserSlice";
+
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../store";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const users = useSelector((state: RootState) => state.auth.users);
   const {
     register: formRegister,
     handleSubmit,
     formState: { errors },
-  } = useForm<Users>();
+  } = useForm<User>();
+
+  const onSubmit = (data: User) => {
+    const userExist = users.some((user: { email: string; password: string }) => user.email === data.email && user.password === data.password);
+    if (userExist) {
+      dispatch(login(data));
+      navigate("/");
+    }
+  };
 
   return (
     <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-gray-200 dark:bg-gray-600 dark:shadow-gray-600">
       <h2 className="text-3xl font-bold "> Halaman Login 🚀</h2>
-      <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit((data) => console.log(data))}>
+      <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit(onSubmit)}>
         <input
           {...formRegister("email", {
             required: "email wajib diisi",
@@ -44,3 +60,6 @@ const Login = () => {
   );
 };
 export default Login;
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.");
+}
