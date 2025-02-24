@@ -2,28 +2,25 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { getBooks } from "../services/api";
+import { Book } from "../models/book";
 // import { getBooks } from "../features/BooSlice";
 // import { useDispatch } from "react-redux";
 
 const home = () => {
-  const [books, setBooks] = useState([]);
-  //  const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   dispatch(getBooks());
-  // }, [dispatach]);
+  const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const response = await getBooks();
-        setBooks(response.data);
+        console.log(response[0]);
+        setBooks(response);
       } catch (err) {
         console.error("Error fetching books:", err);
       }
     };
     fetchBooks();
-  });
+  }, []);
 
   return (
     <>
@@ -48,29 +45,19 @@ const home = () => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
-              <tr className="hover:bg-gray-200">
-                {books.map((book) => (
-                 
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900" key={book.id} >{book.author}</td>
-                    <td className="py-4 px-6 text-sm font-medium text-gray-700">{book.title}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
-                  
-                ))}
-                <td className="py-4 px-6 text-sm font-medium text-gray-900">Eka Kurniawan</td>
-                <td className="py-4 px-6 text-sm text-gray-700">Cantik Itu Luka</td>
-                <td className="py-4 px-6 text-sm text-gray-700">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequuntur consectetur quibusdam exercitationem voluptates, explicabo facere, dolore quos, alias esse minima earum obcaecati inventore ipsam odit. Temporibus
-                  magni nihil reiciendis odit, at voluptas! Minus nobis rem voluptates, libero, eveniet nulla aspernatur sequi hic voluptas distinctio, maiores amet consectetur architecto deserunt inventore aut! Quis aperiam veritatis ab
-                  maiores tempora ad in consectetur rem quam recusandae? Nulla vero saepe quisquam dolorem modi corrupti porro repudiandae aspernatur ducimus sunt. Voluptatem reiciendis, voluptas veritatis magni maxime quae temporibus vitae
-                  nostrum natus veniam aspernatur ad fugiat ipsa aperiam debitis nesciunt qui provident! Distinctio, consectetur repellat. Similique..
-                </td>
-                <td className="py-4 px-6 text-sm text-gray-700">
-                  <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
-                    <a href="/update">Update</a>
-                  </button>
-                  <button className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2">Delete</button>
-                </td>
-              </tr>
+              {books.map((book) => (
+                <tr key={book.id} className="hover:bg-gray-200">
+                  <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
+                  <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
+                  <td className="py-4 px-6 text-sm text-gray-700">{book.descripttion}</td>
+                  <td className="py-4 px-6 text-sm text-gray-700">
+                    <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
+                      <a href="/update">Update</a>
+                    </button>
+                    <button className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2">Delete</button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
