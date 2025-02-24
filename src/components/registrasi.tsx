@@ -19,17 +19,18 @@ const Register = () => {
 
   const userRegister = async (data: User) => {
     const response = await dispatch(register(data));
-    if (response.payload === "200") {
+    if (response.payload === 200) {
       Swal.fire({
         title: "Oops!",
         text: "username already exists",
         icon: "warning",
         confirmButtonText: "OK!",
       });
-    } else if (response.payload === "201") {
+      console.log(response);
+    } else if (response.payload === 201) {
       Swal.fire({
         title: "Succes!",
-        text: "username already exists!",
+        text: "Succes!",
         icon: "success",
         confirmButtonText: "OK!",
       });

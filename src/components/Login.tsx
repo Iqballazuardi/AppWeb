@@ -1,26 +1,55 @@
 import { useForm } from "react-hook-form";
 import { User } from "../features/UserSlice";
 import { login } from "../features/UserSlice";
+import { LoginCredentials } from "../features/UserSlice";
 
-import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../store";
+
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "../store";
-
+// import { RootState } from "../store";
+interface UserResponse {
+  status: number;
+  data: object;
+}
 const Login = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const users = useSelector((state: RootState) => state.auth.users);
+  // const users = useSelector((state: RootState) => state.auth.users);
   const {
     register: formRegister,
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onSubmit = (data: User) => {
-    const userExist = users.some((user: { email: string; password: string }) => user.email === data.email && user.password === data.password);
-    if (userExist) {
-      dispatch(login(data));
+  const onSubmit = async (data: LoginCredentials) => {
+    const response = await dispatch(login(data));
+    const payload = response.payload as UserResponse;
+    if (payload.status === 200) {
+      Swal.fire({
+        title: "Oops!",
+        text: "username or password incorrect!",
+        icon: "warning",
+        confirmButtonText: "OK!",
+      });
+    } else if (payload.status == 201) {
+      Swal.fire({
+        title: "Succes!",
+        text: "Login Success!",
+        icon: "success",
+        confirmButtonText: "OK!",
+      });
+      localStorage.setItem("currentUser", JSON.stringify(payload.data));
+
       navigate("/");
+    } else {
+      Swal.fire({
+        title: "????????!",
+        text: "Login failed",
+        icon: "error",
+        confirmButtonText: "OK!",
+      });
     }
   };
 
@@ -53,13 +82,12 @@ const Login = () => {
           </button>
         </div>
         <div className="mt-5">
-          <button className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">Daftar 🧾</button>
+          <button className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
+            <a href="/registrasi">Daftar 🧾 </a>
+          </button>
         </div>
       </form>
     </div>
   );
 };
 export default Login;
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}

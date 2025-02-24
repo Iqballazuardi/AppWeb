@@ -1,12 +1,14 @@
-import { AnyAction, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../features/UserSlice";
+
+// import { useDispatch } from "react-redux";
 
 export const store = configureStore({
   reducer: {
-    books: userReducer,
+    users: userReducer,
   },
 });
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>;
+// export const useAppDispatch: () => AppDispatch = useDispatch;

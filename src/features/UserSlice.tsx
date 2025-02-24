@@ -8,24 +8,26 @@ export interface User {
   password: string;
 }
 
-export interface AuthUsers {
-  users: User[];
-  currentUser: User | null;
+export interface LoginCredentials {
+  email: string;
+  password: string;
 }
 
-export const login = createAsyncThunk("/users", async () => {
-  const response = await axios.get(`/users`);
+export interface AuthUsers {
+  users: User[];
+  currentUser: string;
+}
+
+export const login = createAsyncThunk<LoginCredentials, LoginCredentials>("/login", async (credentials: LoginCredentials) => {
+  const response = await axios.post("/login", credentials);
+  console.log(response);
   return response.data;
 });
 
-export const register = createAsyncThunk<User, User, { rejectValue: string }>("/registrasi", async (userData: { username: string; email: string; password: string; role: string }, { rejectWithValue }) => {
-  try {
-    const response = await axios.post("/registrasi", userData);
-    console.log(response);
-    return response.data.status;
-  } catch {
-    return rejectWithValue("Failed to register user");
-  }
+export const register = createAsyncThunk<User, User>("/registrasi", async (userData: { username: string; email: string; password: string; role: string }) => {
+  const response = await axios.post("/registrasi", userData);
+  console.log(response);
+  return response.data.status;
 });
 
 const userSlice = createSlice({
@@ -39,14 +41,18 @@ const userSlice = createSlice({
         password: "1234",
       },
     ],
-    currentUser: null,
+    currentUser: "",
   } as AuthUsers,
 
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(register.fulfilled, (state, action) => {
-      state.users.push(action.payload);
-    });
+    builder
+      .addCase(register.fulfilled, (state, action) => {
+        state.users.push(action.payload);
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.currentUser = action.payload.email;
+      });
   },
 });
 export default userSlice.reducer;
