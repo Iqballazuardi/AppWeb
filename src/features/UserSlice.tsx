@@ -22,7 +22,7 @@ export const register = createAsyncThunk<User, User, { rejectValue: string }>("/
   try {
     const response = await axios.post("/registrasi", userData);
     console.log(response);
-    return response.data;
+    return response.data.status;
   } catch {
     return rejectWithValue("Failed to register user");
   }

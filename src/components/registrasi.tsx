@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { register, User } from "../features/UserSlice";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../store";
 // import { useState } from "react";
@@ -8,15 +9,7 @@ import { AppDispatch } from "../store";
 
 const Register = () => {
   const navigate = useNavigate();
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [role, setRole] = useState("");
-  // const dispatch = useDispatch();
 
-  // const data = [username, password, setPassword, role];
-
-  // const navigate = useNavigate();
   const {
     register: formRegister,
     handleSubmit,
@@ -25,21 +18,31 @@ const Register = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const userRegister = async (data: User) => {
-    await dispatch(register(data));
-
-    navigate("/login");
+    const response = await dispatch(register(data));
+    if (response.payload === "200") {
+      Swal.fire({
+        title: "Oops!",
+        text: "username already exists",
+        icon: "warning",
+        confirmButtonText: "OK!",
+      });
+    } else if (response.payload === "201") {
+      Swal.fire({
+        title: "Succes!",
+        text: "username already exists!",
+        icon: "success",
+        confirmButtonText: "OK!",
+      });
+      navigate("/login");
+    } else {
+      Swal.fire({
+        title: "Error!",
+        text: "Register failed",
+        icon: "error",
+        confirmButtonText: "OK!",
+      });
+    }
   };
-
-  // const onSubmit = (data: User) => {
-  //   dispatch(register(data));
-  //   navigate("/login");
-  // };
-
-  // const [isOpen, setIsOpen] = useState(false);
-
-  // const toggleDropdown = () => {
-  //   setIsOpen(!isOpen);==
-  // };
 
   return (
     <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
@@ -52,8 +55,6 @@ const Register = () => {
           type="email"
           placeholder="Email"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
-          // value={username}
-          // onChange={(e) => setUsername(e.target.value)}
         />
         {errors.email && <p>{errors.email.message}</p>}
         <input
@@ -62,8 +63,6 @@ const Register = () => {
           })}
           type="text"
           placeholder="Username"
-          // value={email}
-          // onChange={(e) => setEmail(e.target.value)}
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
         <input
@@ -72,8 +71,6 @@ const Register = () => {
             minLength: { value: 4, message: "Minimal 4 karakter" },
           })}
           type="password"
-          // value={password}
-          // onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
@@ -83,8 +80,6 @@ const Register = () => {
             minLength: { value: 4, message: "Minimal 4 karakter" },
           })}
           type="text"
-          // value={role}
-          // onChange={(e) => setRole(e.target.value)}
           placeholder="Penulis | Pembaca"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
