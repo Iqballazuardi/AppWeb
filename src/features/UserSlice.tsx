@@ -49,6 +49,7 @@ const userSlice = createSlice({
     builder
       .addCase(register.fulfilled, (state, action) => {
         state.users.push(action.payload);
+        console.log(state.users);
       })
       .addCase(login.fulfilled, (state, action) => {
         state.currentUser = action.payload.email;

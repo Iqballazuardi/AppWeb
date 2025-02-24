@@ -1,7 +1,30 @@
-// import { useEffect } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import { getBooks } from "../services/api";
+// import { getBooks } from "../features/BooSlice";
+// import { useDispatch } from "react-redux";
 
 const home = () => {
+  const [books, setBooks] = useState([]);
+  //  const dispatch = useDispatch()
+
+  // useEffect(() => {
+  //   dispatch(getBooks());
+  // }, [dispatach]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await getBooks();
+        setBooks(response.data);
+      } catch (err) {
+        console.error("Error fetching books:", err);
+      }
+    };
+    fetchBooks();
+  });
+
   return (
     <>
       <Navbar />
@@ -26,6 +49,13 @@ const home = () => {
             </thead>
             <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
               <tr className="hover:bg-gray-200">
+                {books.map((book) => (
+                 
+                    <td className="py-4 px-6 text-sm font-medium text-gray-900" key={book.id} >{book.author}</td>
+                    <td className="py-4 px-6 text-sm font-medium text-gray-700">{book.title}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
+                  
+                ))}
                 <td className="py-4 px-6 text-sm font-medium text-gray-900">Eka Kurniawan</td>
                 <td className="py-4 px-6 text-sm text-gray-700">Cantik Itu Luka</td>
                 <td className="py-4 px-6 text-sm text-gray-700">
