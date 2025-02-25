@@ -25,6 +25,26 @@ export const addBook = async (bookData: { author: string; title: string; descrip
   }
 };
 
+export const updateBook = async (id: number, data: { author: string; title: string; description: string }) => {
+  try {
+    const response = await axiosInstance.put(`/books/booksUpdate/${id}`, data);
+    return response.status;
+  } catch (error) {
+    console.error("Error updating book:", error);
+    throw error;
+  }
+};
+
+export const getBookById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`/books/books/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching book by ID:", error);
+    throw error;
+  }
+};
+
 export const deleteBook = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`/books/delete/${id}`);

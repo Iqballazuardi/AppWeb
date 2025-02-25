@@ -12,7 +12,6 @@ const home = () => {
     const fetchBooks = async () => {
       try {
         const response = await getBooks();
-        console.log(response[0]);
         setBooks(response);
       } catch (err) {
         console.error("Error fetching books:", err);
@@ -25,7 +24,7 @@ const home = () => {
     Swal.fire({
       title: "Are you sure ?!",
       showCancelButton: true,
-      confirmButtonText: "Delete!",
+      confirmButtonText: "Delete!!!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const response = await deleteBook(id);
@@ -36,7 +35,6 @@ const home = () => {
             title: "Something wrong!",
             icon: "error",
           });
-          // alert("Failed to add book, please try again.");
         }
 
         Swal.fire("Deleted!", "", "info");
@@ -75,7 +73,7 @@ const home = () => {
                   <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
                   <td className="py-4 px-6 text-sm text-gray-700">
                     <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
-                      <a href="/update">Update</a>
+                      <a href={`/books/booksUpdate/${book.id}`}>Update</a>
                     </button>
                     <button className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
                       Delete
@@ -88,7 +86,7 @@ const home = () => {
         </div>
         <div className="flex justify-end mt-10">
           <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">
-            <a href="/add"> Add Recomendation</a>
+            <a href="/books/addBooks"> Add Recomendation</a>
           </button>
         </div>
       </div>

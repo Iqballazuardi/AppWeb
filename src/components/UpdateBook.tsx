@@ -1,6 +1,25 @@
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import { useParams } from "react-router-dom";
+import { Book } from "../models/book";
+import { getBookById } from "../services/api";
 
 const UpdateBook = () => {
+  const [books, setBooks] = useState<Book[]>([]); //+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id } = useParams<{ id: string }>();
+  // const bookId = parseInt(id);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id !== undefined) {
+        const bookId = parseInt(id);
+        const response = await getBookById(bookId);
+        setBooks(response);
+      }
+    };
+    fetchData();
+  });
+
   return (
     <>
       <Navbar />

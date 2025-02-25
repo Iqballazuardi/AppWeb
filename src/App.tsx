@@ -13,8 +13,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
         <Route path="/registrasi" element={<Register />} />
-        <Route path="/add" element={<AddBooks />} />
-        <Route path="/update" element={<UpdateBook />} />
+        <Route path="/books/addBooks" element={<AddBooks />} />
+        <Route path="/books/booksUpdate/:id" element={<UpdateBook />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
