@@ -14,4 +14,26 @@ export const getBooks = async () => {
   }
 };
 
+export const addBook = async (bookData: { author: string; title: string; description: string }) => {
+  try {
+    const response = await axiosInstance.post("/books/addBooks", bookData);
+    console.log(response);
+    return response.status;
+  } catch (error) {
+    console.error("Error adding book:", error);
+    throw error;
+  }
+};
+
+export const deleteBook = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/books/delete/:id${id}`);
+    console.log(response);
+    return response.status;
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    throw error;
+  }
+};
+
 export default axiosInstance;

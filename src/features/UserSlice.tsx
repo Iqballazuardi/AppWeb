@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface User {
   username: string;
-  role: string;
+  // role: string;
   email: string;
   password: string;
 }
@@ -24,7 +24,7 @@ export const login = createAsyncThunk<LoginCredentials, LoginCredentials>("/logi
   return response.data;
 });
 
-export const register = createAsyncThunk<User, User>("/registrasi", async (userData: { username: string; email: string; password: string; role: string }) => {
+export const register = createAsyncThunk<User, User>("/registrasi", async (userData: { username: string; email: string; password: string }) => {
   const response = await axios.post("/registrasi", userData);
   console.log(response);
   return response.data.status;
@@ -36,7 +36,6 @@ const userSlice = createSlice({
     users: [
       {
         username: "admin",
-        role: "admin",
         email: "admin@gmail.com",
         password: "1234",
       },

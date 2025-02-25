@@ -26,7 +26,6 @@ const Register = () => {
         icon: "warning",
         confirmButtonText: "OK!",
       });
-      console.log(response);
     } else if (response.payload === 201) {
       Swal.fire({
         title: "Succes!",
@@ -75,7 +74,7 @@ const Register = () => {
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        <input
+        {/* <input
           {...formRegister("role", {
             required: "role wajib diisi",
             minLength: { value: 4, message: "Minimal 4 karakter" },
@@ -83,7 +82,7 @@ const Register = () => {
           type="text"
           placeholder="Penulis | Pembaca"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
-        />
+        /> */}
 
         {errors.password && <p>{errors.password.message}</p>}
         <div className="mt-10">

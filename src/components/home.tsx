@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { getBooks } from "../services/api";
 import { Book } from "../models/book";
-// import { getBooks } from "../features/BooSlice";
-// import { useDispatch } from "react-redux";
+// import Swal from "sweetalert2";
 
 const home = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -21,6 +20,21 @@ const home = () => {
     };
     fetchBooks();
   }, []);
+
+  // const deleteBooks = (id: number) => {
+  //   Swal.fire({
+  //     title: "Are you sure ?!",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Save",
+  //   }).then((result) => {
+  //     /* Read more about isConfirmed, isDenied below */
+  //     if (result.isConfirmed) {
+  //       // Delete the book
+
+  //       Swal.fire("Deleted!", "", "info");
+  //     }
+  //   });
+  // };
 
   return (
     <>
@@ -49,7 +63,7 @@ const home = () => {
                 <tr key={book.id} className="hover:bg-gray-200">
                   <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
                   <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
-                  <td className="py-4 px-6 text-sm text-gray-700">{book.descripttion}</td>
+                  <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
                   <td className="py-4 px-6 text-sm text-gray-700">
                     <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
                       <a href="/update">Update</a>
