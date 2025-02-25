@@ -19,7 +19,7 @@ const AddBooks = () => {
         navigate("/");
       } else {
         Swal.fire({
-          title: "Something Wrong!",
+          title: "Something wrong!",
           icon: "error",
         });
         console.log(response);

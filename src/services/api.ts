@@ -25,9 +25,9 @@ export const addBook = async (bookData: { author: string; title: string; descrip
   }
 };
 
-export const deleteBook = async (id: string) => {
+export const deleteBook = async (id: number) => {
   try {
-    const response = await axiosInstance.delete(`/books/delete/:id${id}`);
+    const response = await axiosInstance.delete(`/books/delete/${id}`);
     console.log(response);
     return response.status;
   } catch (error) {

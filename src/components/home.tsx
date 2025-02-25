@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
-import { getBooks } from "../services/api";
+import { getBooks, deleteBook } from "../services/api";
 import { Book } from "../models/book";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 const home = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -21,20 +21,29 @@ const home = () => {
     fetchBooks();
   }, []);
 
-  // const deleteBooks = (id: number) => {
-  //   Swal.fire({
-  //     title: "Are you sure ?!",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Save",
-  //   }).then((result) => {
-  //     /* Read more about isConfirmed, isDenied below */
-  //     if (result.isConfirmed) {
-  //       // Delete the book
+  const deleteBooks = (id: number): void => {
+    Swal.fire({
+      title: "Are you sure ?!",
+      showCancelButton: true,
+      confirmButtonText: "Delete!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await deleteBook(id);
+        if (response === 200) {
+          Swal.fire("Delete!", "", "success");
+        } else {
+          Swal.fire({
+            title: "Something wrong!",
+            icon: "error",
+          });
+          // alert("Failed to add book, please try again.");
+        }
 
-  //       Swal.fire("Deleted!", "", "info");
-  //     }
-  //   });
-  // };
+        Swal.fire("Deleted!", "", "info");
+        window.location.reload();
+      }
+    });
+  };
 
   return (
     <>
@@ -68,7 +77,9 @@ const home = () => {
                     <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
                       <a href="/update">Update</a>
                     </button>
-                    <button className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2">Delete</button>
+                    <button className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
