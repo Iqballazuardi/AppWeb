@@ -6,14 +6,21 @@ import { Book } from "../models/book";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
+import Cookies from "js-cookie";
+
 const home = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    if (localStorage.getItem("currentUser") === null) {
-      navigate("/login");
-    }
+    const loginTimeout = () => {
+      if (!Cookies.get("LoginTimeout")) {
+        Cookies.remove("LoginTimeout");
+        navigate("/login");
+      }
+    };
+    const interval = setInterval(loginTimeout, 1000);
+
     const fetchBooks = async () => {
       try {
         const response = await getBooks();
@@ -23,6 +30,7 @@ const home = () => {
       }
     };
     fetchBooks();
+    return () => clearInterval(interval);
   }, []);
 
   const deleteBooks = (id: number): void => {

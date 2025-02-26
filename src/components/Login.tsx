@@ -4,10 +4,14 @@ import { login } from "../services/api";
 // import { LoginCredentials } from "../features/UserSlice";
 
 // import { AppDispatch } from "../store";
+import Cookies from "js-cookie";
 
 // import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { RootState } from "../store";
 // interface UserResponse {
 //   status: number;
@@ -36,14 +40,15 @@ const Login = () => {
         confirmButtonText: "OK!",
       });
     } else if (response.status == 201) {
-      console.log(response);
-      Swal.fire({
-        title: "Succes!",
-        text: "Login Success!",
-        icon: "success",
-        confirmButtonText: "OK!",
+      toast.success("Hey 👋!", {
+        position: "top-center",
       });
-      localStorage.setItem("currentUser", JSON.stringify(data.username));
+
+      localStorage.setItem("currentUser", response.data.username);
+      const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
+      Cookies.set("LoginTimeout", "true", {
+        expires: inFifteenMinutes,
+      });
 
       navigate("/");
     } else {
@@ -86,11 +91,12 @@ const Login = () => {
           </button>
         </div>
         <div className="mt-5">
-          <button className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
-            <a href="/registrasi">Daftar 🧾 </a>
+          <button className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group" onClick={() => navigate("/registrasi")}>
+            Daftar 🧾
           </button>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
