@@ -25,9 +25,12 @@ export const addBook = async (bookData: { author: string; title: string; descrip
   }
 };
 
-export const updateBook = async (id: number, data: { author: string; title: string; description: string }) => {
+export const updateBookOnApi = async (id: number, book: { author: string; title: string; description: string }) => {
+  console.log(id);
   try {
-    const response = await axiosInstance.put(`/books/booksUpdate/${id}`, data);
+    const response = await axiosInstance.put(`/books/booksUpdate/${id}`, book);
+    console.log(response);
+    console.log(id);
     return response.status;
   } catch (error) {
     console.error("Error updating book:", error);
