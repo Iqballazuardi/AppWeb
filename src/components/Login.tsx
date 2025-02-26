@@ -1,18 +1,18 @@
 import { useForm } from "react-hook-form";
-import { User } from "../features/UserSlice";
-import { login } from "../features/UserSlice";
-import { LoginCredentials } from "../features/UserSlice";
+import { User } from "../models/user";
+import { login } from "../services/api";
+// import { LoginCredentials } from "../features/UserSlice";
 
-import { AppDispatch } from "../store";
+// import { AppDispatch } from "../store";
 
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 // import { RootState } from "../store";
-interface UserResponse {
-  status: number;
-  data: object;
-}
+// interface UserResponse {
+//   status: number;
+//   data: object;
+// }
 const Login = () => {
   const navigate = useNavigate();
   // const users = useSelector((state: RootState) => state.auth.users);
@@ -21,29 +21,33 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
 
-  const onSubmit = async (data: LoginCredentials) => {
-    const response = await dispatch(login(data));
-    const payload = response.payload as UserResponse;
-    if (payload.status === 200) {
+  const onSubmit = async (data: User) => {
+    const response = await login(data);
+    console.log(response.status);
+
+    if (response.status === 200) {
+      console.log(response.status);
       Swal.fire({
         title: "Oops!",
         text: "username or password incorrect!",
         icon: "warning",
         confirmButtonText: "OK!",
       });
-    } else if (payload.status == 201) {
+    } else if (response.status == 201) {
+      console.log(response);
       Swal.fire({
         title: "Succes!",
         text: "Login Success!",
         icon: "success",
         confirmButtonText: "OK!",
       });
-      localStorage.setItem("currentUser", JSON.stringify(payload.data));
+      localStorage.setItem("currentUser", JSON.stringify(data.username));
 
       navigate("/");
     } else {
+      console.log(response);
       Swal.fire({
         title: "????????!",
         text: "Login failed",

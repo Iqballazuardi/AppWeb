@@ -1,8 +1,29 @@
 import axios from "axios";
+// import { User } from "../models/user";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:4000", // Ganti dengan URL API Anda
 });
+
+export const login = async (data: { username: string; password: string }) => {
+  try {
+    const response = await axiosInstance.post("/login", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
+};
+
+export const register = async (userData: { username: string; password: string; email: string }) => {
+  try {
+    const response = await axiosInstance.post("/registrasi", userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error registering:", error);
+    throw error;
+  }
+};
 
 export const getBooks = async () => {
   try {

@@ -4,11 +4,16 @@ import Navbar from "./Navbar";
 import { getBooks, deleteBook } from "../services/api";
 import { Book } from "../models/book";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const home = () => {
+  const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
+    if (localStorage.getItem("currentUser") === null) {
+      navigate("/login");
+    }
     const fetchBooks = async () => {
       try {
         const response = await getBooks();

@@ -11,7 +11,6 @@ import { useForm } from "react-hook-form";
 const UpdateBook = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]); //+
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { register: formRegister, handleSubmit } = useForm<Book>();
   const { id } = useParams<{ id: string }>();
   useEffect(() => {
