@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
-import { getBooks, deleteBook } from "../services/api";
+import { getBooks, deleteBook, searchBook } from "../services/api";
 import { Book } from "../models/book";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
@@ -19,7 +19,7 @@ const home = () => {
         navigate("/login");
       }
     };
-    const interval = setInterval(loginTimeout, 1000);
+    const interval = setInterval(loginTimeout, 1000000);
 
     const fetchBooks = async () => {
       try {
@@ -31,7 +31,7 @@ const home = () => {
     };
     fetchBooks();
     return () => clearInterval(interval);
-  }, []);
+  }, [navigate]);
 
   const deleteBooks = (id: number): void => {
     Swal.fire({
@@ -56,6 +56,27 @@ const home = () => {
     });
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleSearch = () => {
+    // Lakukan logika pencarian di sini\
+    const fetch = async () => {
+      const response = await searchBook(searchTerm);
+      if (response.status === 201) {
+        console.log(response);
+        setBooks(response.data);
+      } else if (response.status === 200) {
+        Swal.fire({
+          title: "No book found!",
+          icon: "info",
+        });
+      }
+    };
+    fetch();
+  };
+
   return (
     <>
       <Navbar />
@@ -63,8 +84,10 @@ const home = () => {
         <h1 className="text-3xl dark:text-white font-semibold mb-6 text-center text-gray-800 underline">Book Recommendations</h1>
         <div>
           <div className="flex justify-end mt-10 mb-5">
-            <input type="text" id="searchInput" placeholder="Search for books . . ." className="px-4 py-2 border rounded-lg  dark:bg-gray-200" />
-            <button className=" px-4 py-2 hover:border rounded-lg ml-2">🔎</button>
+            <input type="text" id="searchInput" placeholder="Search for books . . ." className="px-4 py-2 border rounded-lg  dark:bg-gray-200" value={searchTerm} onChange={handleInputChange} />
+            <button className=" px-4 py-2 hover:border rounded-lg ml-2" onClick={handleSearch}>
+              🔎
+            </button>
           </div>
         </div>
 

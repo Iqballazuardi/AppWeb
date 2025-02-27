@@ -8,26 +8,82 @@ import { updateBookOnApi } from "../services/api";
 
 import { useForm } from "react-hook-form";
 
+// const UpdateBook = () => {
+//   const navigate = useNavigate();
+//   const [books, setBooks] = useState<Book[]>([]);
+//   const { register: formRegister, handleSubmit } = useForm<Book>();
+//   const { id } = useParams<{ id: string }>();
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (id !== undefined) {
+//         const bookId = parseInt(id);
+//         const response = await getBookById(bookId);
+
+//         console.log(response);
+//         setBooks(response[0]);
+//       }
+//     };
+//     fetchData();
+//   }, []);
+//   const handleChange = (e) => {
+//     setBooks(e.target.value);
+//   };
+//   // console.log(books);
+
+//   const fetchBooks = (data: Book) => {
+//     console.log(data);
+//     try {
+//       Swal.fire({
+//         title: "Do you want to save the changes?",
+//         showDenyButton: true,
+//         showCancelButton: true,
+//         confirmButtonText: "Save",
+//         denyButtonText: `Don't save`,
+//       }).then(async (result) => {
+//         /* Read more about isConfirmed, isDenied below */
+//         if (result.isConfirmed) {
+//           const bookId = parseInt(id);
+//           const response = await updateBookOnApi(bookId, data);
+//           if (response === 200) {
+//             Swal.fire("Saved!", "", "success");
+//             navigate(`/`);
+//           } else {
+//             Swal.fire({
+//               title: "Something wrong!",
+//               icon: "error",
+//             });
+//           }
+//         } else if (result.isDenied) {
+//           Swal.fire("Changes are not saved", "", "info");
+//         }
+//       });
+//     } catch (error) {
+//       Swal.fire("Error!", error.message, "error");
+//     }
+//   };
 const UpdateBook = () => {
   const navigate = useNavigate();
-  const [books, setBooks] = useState<Book[]>([]); //+
+  const [book, setBook] = useState<Book | null>(null);
   const { register: formRegister, handleSubmit } = useForm<Book>();
   const { id } = useParams<{ id: string }>();
+
   useEffect(() => {
     const fetchData = async () => {
       if (id !== undefined) {
         const bookId = parseInt(id);
         const response = await getBookById(bookId);
-
-        setBooks(response[0]);
+        console.log(response);
+        setBook(response);
       }
     };
     fetchData();
-  }, []);
-  const handleChange = (e) => {
-    setBooks(e.target.value);
+  }, [id]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (book) {
+      setBook({ ...book, [e.target.name]: e.target.value });
+    }
   };
-  // console.log(books);
 
   const fetchBooks = (data: Book) => {
     console.log(data);
@@ -39,27 +95,35 @@ const UpdateBook = () => {
         confirmButtonText: "Save",
         denyButtonText: `Don't save`,
       }).then(async (result) => {
-        /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          const bookId = parseInt(id);
-          const response = await updateBookOnApi(bookId, data);
-          if (response === 200) {
-            Swal.fire("Saved!", "", "success");
-            navigate(`/`);
-          } else {
-            Swal.fire({
-              title: "Something wrong!",
-              icon: "error",
-            });
+          if (id) {
+            const bookId = parseInt(id);
+            const response = await updateBookOnApi(bookId, data);
+            if (response === 200) {
+              Swal.fire("Saved!", "", "success");
+              navigate(`/`);
+            } else {
+              Swal.fire({
+                title: "Something wrong!",
+                icon: "error",
+              });
+            }
           }
         } else if (result.isDenied) {
           Swal.fire("Changes are not saved", "", "info");
         }
       });
     } catch (error) {
-      Swal.fire("Error!", error.message, "error");
+      if (error instanceof Error) {
+        Swal.fire("Error!", error.message, "error");
+      } else {
+        Swal.fire("Error!", "An unknown error occurred", "error");
+      }
     }
   };
+
+  if (!book) return <div>Loading...</div>;
+
   return (
     <>
       <Navbar />
@@ -75,7 +139,7 @@ const UpdateBook = () => {
                 required: "wajib diisi",
               })}
               type="text"
-              value={books.author}
+              value={book.author}
               id="author"
               name="author"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
@@ -93,7 +157,7 @@ const UpdateBook = () => {
               })}
               type="text"
               id="title"
-              value={books.title}
+              value={book.title}
               name="title"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
@@ -110,7 +174,7 @@ const UpdateBook = () => {
               })}
               id="description"
               name="description"
-              value={books.description}
+              value={book.description}
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
               onChange={handleChange}

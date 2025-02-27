@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-import { ToastContainer, toast } from "react-toastify";
+// import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import { RootState } from "../store";
 // interface UserResponse {
@@ -40,8 +40,11 @@ const Login = () => {
         confirmButtonText: "OK!",
       });
     } else if (response.status == 201) {
-      toast.success("Hey 👋!", {
-        position: "top-center",
+      Swal.fire({
+        title: "Success!!",
+        text: "Login Succes!",
+        icon: "success",
+        confirmButtonText: "OK!",
       });
 
       localStorage.setItem("currentUser", response.data.username);
@@ -96,7 +99,6 @@ const Login = () => {
           </button>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
 };

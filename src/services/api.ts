@@ -35,10 +35,19 @@ export const getBooks = async () => {
   }
 };
 
+export const searchBook = async (title: string) => {
+  try {
+    const response = await axiosInstance.get(`/books/search?title=${title}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error searching books:", error);
+    throw error;
+  }
+};
+
 export const addBook = async (bookData: { author: string; title: string; description: string }) => {
   try {
     const response = await axiosInstance.post("/books/addBooks", bookData);
-    console.log(response);
     return response.status;
   } catch (error) {
     console.error("Error adding book:", error);
@@ -50,8 +59,7 @@ export const updateBookOnApi = async (id: number, book: { author: string; title:
   console.log(id);
   try {
     const response = await axiosInstance.put(`/books/booksUpdate/${id}`, book);
-    console.log(response);
-    console.log(id);
+
     return response.status;
   } catch (error) {
     console.error("Error updating book:", error);
@@ -72,7 +80,6 @@ export const getBookById = async (id: number) => {
 export const deleteBook = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`/books/delete/${id}`);
-    console.log(response);
     return response.status;
   } catch (error) {
     console.error("Error deleting book:", error);
