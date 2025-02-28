@@ -20,7 +20,9 @@ const home = () => {
     setCurrentPage(page);
   };
 
-  const paginatedData = books.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const newData = books.sort((a, b) => b.id - a.id);
+
+  const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
     const loginTimeout = () => {
@@ -29,7 +31,7 @@ const home = () => {
         navigate("/login");
       }
     };
-    const interval = setInterval(loginTimeout, 3000);
+    const interval = setInterval(loginTimeout, 1000);
 
     const fetchBooks = async () => {
       try {
@@ -45,9 +47,13 @@ const home = () => {
 
   const deleteBooks = (id: number): void => {
     Swal.fire({
-      title: "Are you sure ?!",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Delete!!!",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const response = await deleteBook(id);
@@ -89,11 +95,12 @@ const home = () => {
   return (
     <>
       <Navbar />
-      <div className="container rounded-lg shadow-2xl p-20 text-center w-8xl m-auto mt-30 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
+
+      <div className="container rounded-lg shadow-2xl p-20 text-center w-8xl m-auto mt-5 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
         <h1 className="text-3xl dark:text-white font-semibold mb-6 text-center text-gray-800 underline">Book Recommendations</h1>
         <div>
           <div className="flex justify-end mt-10 mb-5">
-            <input type="text" id="searchInput" placeholder="Search for books . . ." className="px-4 py-2 border rounded-lg  dark:bg-gray-200" value={searchTerm} onChange={handleInputChange} />
+            <input type="text" id="searchInput" placeholder="Search for book by title" className="px-4 py-2 border rounded-lg  dark:bg-gray-200" value={searchTerm} onChange={handleInputChange} />
             <button className=" px-4 py-2 hover:border rounded-lg ml-2" onClick={handleSearch}>
               🔎
             </button>
@@ -101,33 +108,39 @@ const home = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl">
-            <thead className="bg-gray-600 dark:bg-gray-400 text-white">
-              <tr>
-                <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider ">Writer</th>
-                <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider ">Title</th>
-                <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider ">Description</th>
-                <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider ">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
-              {paginatedData.map((book) => (
-                <tr key={book.id} className="hover:bg-gray-200">
-                  <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
-                  <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
-                  <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
-                  <td className="py-4 px-6 text-sm text-gray-700">
-                    <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
-                      <a href={`/books/booksUpdate/${book.id}`}>Update</a>
-                    </button>
-                    <button className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
-                      Delete
-                    </button>
-                  </td>
+          {paginatedData.length === 0 ? (
+            <div className="text-center py-10">
+              <p className="text-2xl font-medium text-red-500">Tidak ada data buku tersedia</p>
+            </div>
+          ) : (
+            <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl">
+              <thead className="bg-gray-600 dark:bg-gray-400 text-white">
+                <tr>
+                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Writer</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Title</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Description</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
+                {paginatedData.map((book) => (
+                  <tr key={book.id} className="hover:bg-gray-200">
+                    <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">
+                      <button className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
+                        <a href={`/books/booksUpdate/${book.id}`}>Update</a>
+                      </button>
+                      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         <div className="flex justify-end mt-10">

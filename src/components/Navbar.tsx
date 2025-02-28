@@ -3,7 +3,6 @@ import DarkModeToggle from "./DarkMode";
 import { useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
-import { ToastContainer, toast } from "react-toastify";
 const Navbar = () => {
   const navigate = useNavigate();
   const logout = () => {
@@ -26,16 +25,11 @@ const Navbar = () => {
     });
   };
 
-  const topRight = () => {
-    toast.success("Hey 👋!", {
-      position: "top-right",
-    });
-  };
   return (
     <nav className="bg-gray-600 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-3xl font-bold">
-          <a href="/">Library</a>
+          <a href="/">Library 📖</a>
         </div>
         <ul className="flex space-x-4">
           <li>
@@ -52,9 +46,6 @@ const Navbar = () => {
             <button className="text-gray-300 hover:text-white" onClick={logout}>
               Logout
             </button>
-            <button className="text-gray-300 hover:text-white" onClick={topRight}>
-              bom
-            </button>
           </li>
           <li>
             <a href="#" className="text-gray-300 hover:text-white">
@@ -63,7 +54,6 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-      <ToastContainer />
     </nav>
   );
 };
