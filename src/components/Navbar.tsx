@@ -34,7 +34,7 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-600 p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-lg font-bold">
+        <div className="text-white text-3xl font-bold">
           <a href="/">Library</a>
         </div>
         <ul className="flex space-x-4">

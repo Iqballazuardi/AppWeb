@@ -5,12 +5,22 @@ import { getBooks, deleteBook, searchBook } from "../services/api";
 import { Book } from "../models/book";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
-
+import Pagination from "./Pagination";
 import Cookies from "js-cookie";
 
+const itemsPerPage: number = 4;
 const home = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(books.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const paginatedData = books.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
     const loginTimeout = () => {
@@ -19,7 +29,7 @@ const home = () => {
         navigate("/login");
       }
     };
-    const interval = setInterval(loginTimeout, 1000000);
+    const interval = setInterval(loginTimeout, 3000);
 
     const fetchBooks = async () => {
       try {
@@ -61,7 +71,6 @@ const home = () => {
     setSearchTerm(event.target.value);
   };
   const handleSearch = () => {
-    // Lakukan logika pencarian di sini\
     const fetch = async () => {
       const response = await searchBook(searchTerm);
       if (response.status === 201) {
@@ -102,7 +111,7 @@ const home = () => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
-              {books.map((book) => (
+              {paginatedData.map((book) => (
                 <tr key={book.id} className="hover:bg-gray-200">
                   <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
                   <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
@@ -120,11 +129,13 @@ const home = () => {
             </tbody>
           </table>
         </div>
+
         <div className="flex justify-end mt-10">
           <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">
             <a href="/books/addBooks"> Add Recomendation</a>
           </button>
         </div>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </>
   );
