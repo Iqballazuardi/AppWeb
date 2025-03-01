@@ -72,8 +72,7 @@ const UpdateBook = () => {
       if (id !== undefined) {
         const bookId = parseInt(id);
         const response = await getBookById(bookId);
-        console.log(response);
-        setBook(response);
+        setBook(response.data[0]);
       }
     };
     fetchData();
@@ -86,7 +85,6 @@ const UpdateBook = () => {
   };
 
   const fetchBooks = (data: Book) => {
-    console.log(data);
     try {
       Swal.fire({
         title: "Do you want to save the changes?",

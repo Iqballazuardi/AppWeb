@@ -4,36 +4,36 @@ Deadline Penyelesaian: 14 Hari.
 
 1. Membuat Halaman Login & Registrasi
    - ✅ Buat halaman login & registrasi menggunakan React + Tailwind CSS dengan TypeScript.
-     - Input: email & password.
-     - Validasi input menggunakan React Hook Form dan Yup.
-     - Tampilkan pesan error jika login gagal.
-   - ✅ Integrasi dengan API menggunakan Axios.
-     - Endpoint Login: POST /auth/login.
-     - Endpoint Registrasi: POST /auth/register.
-     - Simpan session/cookie ke localStorage setelah login berhasil.
+     - Input: email & password. ✅
+     - Validasi input menggunakan React Hook Form dan Yup. ✅
+     - Tampilkan pesan error jika login gagal. ✅
+   - ✅ Integrasi dengan API menggunakan Axios. ✅
+     - Endpoint Login: POST /auth/login. ✅
+     - Endpoint Registrasi: POST /auth/register. ✅
+     - Simpan session/cookie ke localStorage setelah login berhasil.✅
 2. Dashboard & Fetch Data dari API
    - ✅ Buat halaman Dashboard setelah login berhasil.
-     - Tampilkan data dari API (contoh: daftar produk).
-     - Endpoint API: GET /products.
+     - Tampilkan data dari API (contoh: daftar produk).✅
+     - Endpoint API: GET /products.✅
      - Gunakan React Query untuk fetching data.
    - ✅ Buat fitur logout.
-     - Hapus token dari localStorage.
-     - Redirect ke halaman login.
+     - Hapus token dari localStorage.✅
+     - Redirect ke halaman login.✅
 3. CRUD Data (Produk atau User)
-   - ✅ Buat halaman untuk Menampilkan, Menambahkan, Mengedit, dan Menghapus Data.
-     - Tampilkan daftar produk dalam table/grid (disarankan menggunakan data table).
+   - ✅ Buat halaman untuk Menampilkan, Menambahkan, Mengedit, dan Menghapus Data.✅
+     - Tampilkan daftar produk dalam table/grid (disarankan menggunakan data table).✅
      - Tambahkan fitur pencarian & filter.
-     - Gunakan modal atau halaman terpisah untuk tambah/edit data.
+     - Gunakan modal atau halaman terpisah untuk tambah/edit data. ✅
      - Integrasi API:
-       - POST /products (Tambah data).
-       - PUT/PATCH /products/:id (Edit data).
-       - DELETE /products/:id (Hapus data).
+       - POST /products (Tambah data). ✅
+       - PUT/PATCH /products/:id (Edit data). ✅
+       - DELETE /products/:id (Hapus data). ✅
 4. Fitur Tambahan
    - ✅ Dark Mode
-     - Implementasikan Dark Mode menggunakan Tailwind CSS dengan mode light/dark switch.
-     - Simpan preferensi pengguna di localStorage.
-   - ✅ Notifikasi Toast
-     - Tambahkan notifikasi toast (contoh: react-toastify) untuk memberikan feedback kepada pengguna saat terjadi aksi seperti login berhasil/gagal, tambah/edit/hapus data.
+     - Implementasikan Dark Mode menggunakan Tailwind CSS dengan mode light/dark switch. ✅
+     - Simpan preferensi pengguna di localStorage. ✅
+   - ✅ Notifikasi Toast 
+     - Tambahkan notifikasi toast (contoh: react-toastify) untuk memberikan feedback kepada pengguna saat terjadi aksi seperti login berhasil/gagal, tambah/edit/hapus data. ✅
 5. Dokumentasi & Deployment
    - ✅ Dokumentasi di README.md.
      - Cara menjalankan proyek.

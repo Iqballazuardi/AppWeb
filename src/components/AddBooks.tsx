@@ -11,18 +11,23 @@ const AddBooks = () => {
   const fetchBooks = async (data: Book) => {
     try {
       const response = await addBook(data);
-      if (response === 200) {
+      if (response === 201) {
         Swal.fire({
           title: "Book added successfully!",
           icon: "success",
         });
         navigate("/");
+      } else if (response === 200) {
+        Swal.fire({
+          title: "Book already Exists!",
+          icon: "warning",
+        });
       } else {
         Swal.fire({
           title: "Something wrong!",
           icon: "error",
         });
-        console.log(response);
+
         // alert("Failed to add book, please try again.");
       }
     } catch (err) {

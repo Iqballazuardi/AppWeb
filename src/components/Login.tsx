@@ -1,38 +1,26 @@
 import { useForm } from "react-hook-form";
 import { User } from "../models/user";
 import { login } from "../services/api";
-// import { LoginCredentials } from "../features/UserSlice";
 
-// import { AppDispatch } from "../store";
 import Cookies from "js-cookie";
 
-// import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-// import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { RootState } from "../store";
-// interface UserResponse {
-//   status: number;
-//   data: object;
-// }
+
 const Login = () => {
   const navigate = useNavigate();
-  // const users = useSelector((state: RootState) => state.auth.users);
   const {
     register: formRegister,
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
-  // const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async (data: User) => {
     const response = await login(data);
-    console.log(response.status);
 
     if (response.status === 200) {
-      console.log(response.status);
       Swal.fire({
         title: "Oops!",
         text: "username or password incorrect!",
@@ -47,15 +35,14 @@ const Login = () => {
         confirmButtonText: "OK!",
       });
 
-      localStorage.setItem("currentUser", response.data.username);
-      const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
+      localStorage.setItem("authToken", response.token);
+      const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 150000);
       Cookies.set("LoginTimeout", "true", {
         expires: inFifteenMinutes,
       });
 
       navigate("/");
     } else {
-      console.log(response);
       Swal.fire({
         title: "????????!",
         text: "Login failed",

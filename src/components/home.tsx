@@ -36,7 +36,11 @@ const home = () => {
     const fetchBooks = async () => {
       try {
         const response = await getBooks();
-        setBooks(response);
+        if (response.status === 201) {
+          setBooks(response.data);
+        } else if (response.status === 401) {
+          navigate("/login");
+        }
       } catch (err) {
         console.error("Error fetching books:", err);
       }
@@ -80,7 +84,6 @@ const home = () => {
     const fetch = async () => {
       const response = await searchBook(searchTerm);
       if (response.status === 201) {
-        console.log(response);
         setBooks(response.data);
       } else if (response.status === 200) {
         Swal.fire({

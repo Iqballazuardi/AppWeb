@@ -16,6 +16,7 @@ const Navbar = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Cookies.remove("LoginTimeout");
+        localStorage.removeItem("authToken");
         Swal.fire({
           title: "Logout!",
           icon: "success",
