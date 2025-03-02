@@ -48,7 +48,7 @@ const home = () => {
     getBooksMutation.mutate();
 
     return () => clearInterval(interval);
-  }, [getBooksMutation, navigate]);
+  }, []);
 
   const deleteMutation = useMutation({
     mutationFn: deleteBook,
@@ -108,7 +108,6 @@ const home = () => {
   const handleSearch = (data: string) => {
     searchMutation.mutate(data);
   };
-
   return (
     <>
       <Navbar />

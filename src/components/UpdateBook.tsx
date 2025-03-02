@@ -33,41 +33,6 @@ const UpdateBook = () => {
     }
   };
 
-  // const fetchBooks = (data: Book) => {
-  //   try {
-  //     Swal.fire({
-  //       title: "Do you want to save the changes?",
-  //       showDenyButton: true,
-  //       showCancelButton: true,
-  //       confirmButtonText: "Save",
-  //       denyButtonText: `Don't save`,
-  //     }).then(async (result) => {
-  //       if (result.isConfirmed) {
-  //         if (id) {
-  //           const bookId = parseInt(id);
-  //           const response = await updateBookOnApi(bookId, data);
-  //           if (response === 200) {
-  //             Swal.fire("Saved!", "", "success");
-  //             navigate(`/`);
-  //           } else {
-  //             Swal.fire({
-  //               title: "Something wrong!",
-  //               icon: "error",
-  //             });
-  //           }
-  //         }
-  //       } else if (result.isDenied) {
-  //         Swal.fire("Changes are not saved", "", "info");
-  //       }
-  //     });
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       Swal.fire("Error!", error.message, "error");
-  //     } else {
-  //       Swal.fire("Error!", "An unknown error occurred", "error");
-  //     }
-  //   }
-  // };
   const mutation = useMutation({
     mutationFn: (data: Book) => {
       if (id) {
