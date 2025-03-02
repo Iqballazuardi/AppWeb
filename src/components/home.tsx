@@ -7,13 +7,13 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import Pagination from "./Pagination";
 import Cookies from "js-cookie";
+import { useMutation } from "@tanstack/react-query";
 
 const itemsPerPage: number = 4;
 const home = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-
   const totalPages = Math.ceil(books.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -23,7 +23,19 @@ const home = () => {
   const newData = books.sort((a, b) => b.id - a.id);
 
   const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
+  const getBooksMutation = useMutation({
+    mutationFn: getBooks,
+    onSuccess: (response) => {
+      if (response.status === 201) {
+        setBooks(response.data);
+      } else if (response.status === 401) {
+        navigate("/login");
+      }
+    },
+    onError: (error) => {
+      console.error("Error searching books:", error);
+    },
+  });
   useEffect(() => {
     const loginTimeout = () => {
       if (!Cookies.get("LoginTimeout")) {
@@ -33,21 +45,27 @@ const home = () => {
     };
     const interval = setInterval(loginTimeout, 1000);
 
-    const fetchBooks = async () => {
-      try {
-        const response = await getBooks();
-        if (response.status === 201) {
-          setBooks(response.data);
-        } else if (response.status === 401) {
-          navigate("/login");
-        }
-      } catch (err) {
-        console.error("Error fetching books:", err);
-      }
-    };
-    fetchBooks();
+    getBooksMutation.mutate();
+
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, [getBooksMutation, navigate]);
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteBook,
+    onSuccess: (response) => {
+      if (response === 200) {
+        Swal.fire("Delete!", "", "success");
+      } else {
+        Swal.fire({
+          title: "Something wrong!",
+          icon: "error",
+        });
+      }
+
+      Swal.fire("Deleted!", "", "info");
+      window.location.reload();
+    },
+  });
 
   const deleteBooks = (id: number): void => {
     Swal.fire({
@@ -60,18 +78,7 @@ const home = () => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await deleteBook(id);
-        if (response === 200) {
-          Swal.fire("Delete!", "", "success");
-        } else {
-          Swal.fire({
-            title: "Something wrong!",
-            icon: "error",
-          });
-        }
-
-        Swal.fire("Deleted!", "", "info");
-        window.location.reload();
+        deleteMutation.mutate(id);
       }
     });
   };
@@ -80,9 +87,10 @@ const home = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-  const handleSearch = () => {
-    const fetch = async () => {
-      const response = await searchBook(searchTerm);
+
+  const searchMutation = useMutation({
+    mutationFn: searchBook,
+    onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
       } else if (response.status === 200) {
@@ -91,8 +99,14 @@ const home = () => {
           icon: "info",
         });
       }
-    };
-    fetch();
+    },
+    onError: (error) => {
+      console.error("Error searching books:", error);
+    },
+  });
+
+  const handleSearch = (data: string) => {
+    searchMutation.mutate(data);
   };
 
   return (
@@ -104,7 +118,7 @@ const home = () => {
         <div>
           <div className="flex justify-end mt-10 mb-5">
             <input type="text" id="searchInput" placeholder="Search for book by title" className="px-4 py-2 border rounded-lg  dark:bg-gray-200" value={searchTerm} onChange={handleInputChange} />
-            <button className=" px-4 py-2 hover:border rounded-lg ml-2" onClick={handleSearch}>
+            <button className=" px-4 py-2 hover:border rounded-lg ml-2" onClick={() => handleSearch(searchTerm)}>
               🔎
             </button>
           </div>

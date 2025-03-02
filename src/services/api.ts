@@ -30,7 +30,7 @@ export const login = async (data: { username: string; password: string }) => {
   }
 };
 
-export const register = async (userData: { username: string; password: string; email: string }) => {
+export const registrasi = async (userData: { username: string; password: string; email: string }) => {
   try {
     const response = await axiosInstance.post("/auth/registrasi", userData);
     return response.data;

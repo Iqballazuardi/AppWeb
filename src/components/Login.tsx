@@ -3,53 +3,67 @@ import { User } from "../models/user";
 import { login } from "../services/api";
 
 import Cookies from "js-cookie";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     register: formRegister,
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
 
-  const onSubmit = async (data: User) => {
-    const response = await login(data);
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Oops!",
+          text: "Email or password incorrect!",
+          icon: "warning",
+          confirmButtonText: "OK!",
+        });
+      } else if (response.status === 201) {
+        Swal.fire({
+          title: "Success!!",
+          text: "Login Succes!",
+          icon: "success",
+          confirmButtonText: "OK!",
+        });
 
-    if (response.status === 200) {
+        localStorage.setItem("authToken", response.token);
+        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
+        Cookies.set("LoginTimeout", "true", {
+          expires: inFifteenMinutes,
+        });
+        queryClient.invalidateQueries({ queryKey: ["login"] });
+        navigate("/");
+      } else {
+        Swal.fire({
+          title: "????????!",
+          text: "Login failed",
+          icon: "error",
+          confirmButtonText: "TRY AGAIN!",
+        });
+      }
+    },
+    onError: () => {
       Swal.fire({
         title: "Oops!",
-        text: "username or password incorrect!",
-        icon: "warning",
-        confirmButtonText: "OK!",
-      });
-    } else if (response.status == 201) {
-      Swal.fire({
-        title: "Success!!",
-        text: "Login Succes!",
-        icon: "success",
-        confirmButtonText: "OK!",
-      });
-
-      localStorage.setItem("authToken", response.token);
-      const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 150000);
-      Cookies.set("LoginTimeout", "true", {
-        expires: inFifteenMinutes,
-      });
-
-      navigate("/");
-    } else {
-      Swal.fire({
-        title: "????????!",
-        text: "Login failed",
+        text: "Terjadi kesalahan saat login!",
         icon: "error",
         confirmButtonText: "OK!",
       });
-    }
+    },
+  });
+
+  const onSubmit = (data: User) => {
+    mutation.mutate(data);
   };
 
   return (

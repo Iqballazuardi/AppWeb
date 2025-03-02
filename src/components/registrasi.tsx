@@ -1,12 +1,9 @@
 import { useForm } from "react-hook-form";
-import { register } from "../services/api";
+import { registrasi } from "../services/api";
 import { User } from "../models/user";
-// import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-// import { AppDispatch } from "../store";
-// import { useState } from "react";
-// import { useCallback } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -16,39 +13,52 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
-  // const dispatch = useDispatch<AppDispatch>();
 
-  const userRegister = async (data: User) => {
-    const response = await register(data);
-    if (response.status === 200) {
-      Swal.fire({
-        title: "Oops!",
-        text: "username already exists",
-        icon: "warning",
-        confirmButtonText: "OK!",
-      });
-    } else if (response.status === 201) {
-      Swal.fire({
-        title: "Succes!",
-        text: "Succes!",
-        icon: "success",
-        confirmButtonText: "OK!",
-      });
-      navigate("/login");
-    } else {
+  const mutation = useMutation({
+    mutationFn: registrasi,
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Oops!",
+          text: "username already exists",
+          icon: "warning",
+          confirmButtonText: "OK!",
+        });
+      } else if (response.status === 201) {
+        Swal.fire({
+          title: "Succes!",
+          text: "Succes!",
+          icon: "success",
+          confirmButtonText: "OK!",
+        });
+        navigate("/login");
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Register failed",
+          icon: "error",
+          confirmButtonText: "OK!",
+        });
+      }
+    },
+    onError: () => {
       Swal.fire({
         title: "Error!",
         text: "Register failed",
         icon: "error",
         confirmButtonText: "OK!",
       });
-    }
+    },
+  });
+
+  const onSubmit = (data: User) => {
+    mutation.mutate(data);
   };
 
   return (
     <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
       <h2 className="text-3xl font-bold dark:text-zinc-200"> Halaman Registrasis</h2>
-      <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit(userRegister)}>
+      <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit(onSubmit)}>
         <input
           {...formRegister("email", {
             required: "email wajib diisi",
