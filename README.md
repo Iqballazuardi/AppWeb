@@ -1,50 +1,93 @@
-# React + TypeScript + Vite
+# Project Library - Rekomendasi Buku
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikasi web yang menyajikan rekomendasi buku dengan fitur untuk menambah, menghapus, dan mengupdate data buku. Proyek ini menggunakan React dengan TypeScript untuk front-end dan Express untuk back-end. Teknologi lain yang digunakan meliputi:
 
-Currently, two official plugins are available:
+- **SweetAlert (swal):** Untuk notifikasi dan konfirmasi interaktif.
+- **Axios:** Untuk meng-handle HTTP request.
+- **js-cookie:** Untuk manajemen cookies dan penyimpanan sesi.
+- **React Query:** Untuk sinkronisasi data antara server dan client.
+- **React Router:** Untuk navigasi antar halaman aplikasi.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Fitur Utama
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Tampilan Rekomendasi Buku:** Menampilkan daftar buku rekomendasi.
+- **Tambah Buku:** Memungkinkan penambahan buku baru.
+- **Hapus Buku:** Menghapus buku yang sudah tidak diinginkan.
+- **Update Buku:** Mengupdate informasi buku yang ada.
+- **Notifikasi Interaktif:** Menggunakan SweetAlert untuk interaksi pengguna.
+- **Sinkronisasi Data:** Manajemen state dan data dengan React Query.
+- **Routing Dinamis:** Navigasi antar halaman dengan React Router.
+- **Manajemen Sesi:** Penggunaan js-cookie untuk penyimpanan data sesi.
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Teknologi yang Digunakan
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **Front-end:**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+  - React
+  - TypeScript
+  - React Router
+  - React Query
+  - SweetAlert (swal)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+- **Back-end:**
+
+  - Express
+
+- **Lainnya:**
+  - Axios
+  - js-cookie
+
+---
+
+## installassi
+
+- **Front-end:**
+
+  - cd appweb
+  - npm install
+  - npm run dev
+
+- **Back-end:**
+  - cd be-appweb
+  - npm install
+  - nodemon index
+
+## Struktur Proyek
+
+Berikut adalah gambaran umum struktur proyek:
+
+```plaintext
+
+BE-AppWeb/
+   ├── index.js/             // Entry point untuk Express server
+   │
+   └── db.js/               // koneksi ke database
+
+
+
+AppWeb/
+   │
+   └──src/
+        ├── components/
+        │   ├── AddBook.tsx       // Komponen Tambah buku
+        │   ├── DarkMode.tsx      // Komponen Dark mode
+        │   ├── DropDown.tsx      // Komponen Drop down
+        │   ├── Home.tsx          // Komponen Home, daftar buku
+        │   ├── Login.tsx         // Komponen Login
+        │   ├── Navbar.tsx        // Komponen Navbar
+        │   ├── Pagination.tsx    // Komponen Pagination
+        │   ├── Registrasi.tsx    // Komponen Registrasi
+        │   └── UpdateBook.tsx    // Komponen notifikasi dengan swal
+        │
+        ├── models/
+        │   ├── book.ts           // interface book
+        │   └── user.ts           // interface user
+        ├── services/
+        │   └── api.ts            // Konfigurasi Axios untuk melakukan request API
+        ├── App.tsx               // Komponen utama aplikasi
+        └── index.tsx             // Entry point React
 ```
