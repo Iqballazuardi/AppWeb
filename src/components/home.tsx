@@ -32,7 +32,7 @@ const home = () => {
         navigate("/login");
       }
     };
-    const interval = setInterval(loginTimeout, 1000);
+    const interval = setInterval(loginTimeout, 5000);
 
     getBooksMutation.mutate();
 
@@ -79,7 +79,7 @@ const home = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
         deleteMutation.mutate(id);
       }
@@ -112,12 +112,13 @@ const home = () => {
     onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
-      } else if (response.status === 200) {
+        setIsOpen(!isOpen);
+      } else {
         Swal.fire({
           title: "No books found by this genre",
           icon: "info",
         });
-        navigate("/login");
+        setIsOpen(!isOpen);
       }
     },
     onError: (error) => {
@@ -135,6 +136,7 @@ const home = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <>
       <Navbar />
@@ -203,7 +205,7 @@ const home = () => {
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.genre}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toUpperCase()}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
                       <button className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
                         <a href={`/books/booksUpdate/${book.id}`}>Update</a>

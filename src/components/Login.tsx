@@ -37,7 +37,7 @@ const Login = () => {
         });
 
         localStorage.setItem("authToken", response.token);
-        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
+        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 5000);
         Cookies.set("LoginTimeout", "true", {
           expires: inFifteenMinutes,
         });
