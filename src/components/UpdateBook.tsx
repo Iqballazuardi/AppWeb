@@ -117,6 +117,23 @@ const UpdateBook = () => {
             />
           </div>
           <div>
+            <label htmlFor="genre" className="block text-lg font-medium text-gray-700">
+              Genre
+            </label>
+            <input
+              {...formRegister("genre", {
+                required: "wajib diisi",
+              })}
+              type="text"
+              id="genre"
+              value={book.genre}
+              name="genre"
+              className="mt-1 block w-full px-4 py-2 border rounded-lg"
+              required
+              onChange={handleChange}
+            />
+          </div>
+          <div>
             <label htmlFor="description" className="block text-lg font-medium text-gray-700">
               Description
             </label>

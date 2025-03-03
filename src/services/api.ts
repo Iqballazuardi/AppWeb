@@ -59,6 +59,15 @@ export const searchBook = async (title: string) => {
     throw error;
   }
 };
+export const getGenre = async (genre: string) => {
+  try {
+    const response = await axiosInstance.get(`/books/genre?genre=${genre}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching books by genre:", error);
+    throw error;
+  }
+};
 
 export const addBook = async (bookData: { author: string; title: string; description: string }) => {
   try {
