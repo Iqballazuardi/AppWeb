@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { User } from "../models/user";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:4000",
@@ -80,7 +79,6 @@ export const addBook = async (bookData: { author: string; title: string; descrip
 };
 
 export const updateBookOnApi = async (id: number, book: { author: string; title: string; description: string }) => {
-  console.log(id);
   try {
     const response = await axiosInstance.put(`/books/update/${id}`, book);
 

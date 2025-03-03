@@ -66,7 +66,6 @@ const UpdateBook = () => {
       confirmButtonText: "Save",
       denyButtonText: `Don't save`,
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         mutation.mutate(data);
       } else if (result.isDenied) {
