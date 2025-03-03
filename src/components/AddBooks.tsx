@@ -85,6 +85,22 @@ const AddBooks = () => {
             />
           </div>
           <div>
+            <label htmlFor="genre" className="block text-lg font-medium text-gray-700">
+              Genre
+            </label>
+            <input
+              {...formRegister("genre", {
+                required: "genre is required",
+              })}
+              type="text"
+              id="genre"
+              placeholder="Horor | Misteri | action"
+              name="genre"
+              className="mt-1 block w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div>
             <label htmlFor="description" className="block text-lg font-medium text-gray-700">
               Description
             </label>

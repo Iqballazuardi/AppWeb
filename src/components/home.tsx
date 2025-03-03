@@ -97,7 +97,7 @@ const home = () => {
         setBooks(response.data);
       } else if (response.status === 200) {
         Swal.fire({
-          title: ``,
+          title: response.message,
           icon: "info",
         });
       }
@@ -110,6 +110,7 @@ const home = () => {
   const genreMutation = useMutation({
     mutationFn: getGenre,
     onSuccess: (response) => {
+      console.log(response.status);
       if (response.status === 201) {
         setBooks(response.data);
         setIsOpen(!isOpen);
@@ -205,7 +206,7 @@ const home = () => {
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toUpperCase()}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
                       <button className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
                         <a href={`/books/booksUpdate/${book.id}`}>Update</a>

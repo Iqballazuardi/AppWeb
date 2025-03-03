@@ -1,4 +1,5 @@
 import axios from "axios";
+// import { User } from "../models/user";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:4000",
@@ -68,7 +69,7 @@ export const getGenre = async (genre: string) => {
   }
 };
 
-export const addBook = async (bookData: { author: string; title: string; description: string }) => {
+export const addBook = async (bookData: { author: string; title: string; genre: string; description: string }) => {
   try {
     const response = await axiosInstance.post("/books/add", bookData);
     return response.status;
@@ -78,10 +79,9 @@ export const addBook = async (bookData: { author: string; title: string; descrip
   }
 };
 
-export const updateBookOnApi = async (id: number, book: { author: string; title: string; description: string }) => {
+export const updateBookOnApi = async (id: number, book: { author: string; title: string; description: string; genre: string }) => {
   try {
     const response = await axiosInstance.put(`/books/update/${id}`, book);
-
     return response.status;
   } catch (error) {
     console.error("Error updating book:", error);

@@ -17,17 +17,18 @@ const Register = () => {
   const mutation = useMutation({
     mutationFn: registrasi,
     onSuccess: (response) => {
+      console.log(response);
       if (response.status === 200) {
         Swal.fire({
           title: "Oops!",
-          text: "username already exists",
+          text: response.message,
           icon: "warning",
           confirmButtonText: "OK!",
         });
       } else if (response.status === 201) {
         Swal.fire({
           title: "Succes!",
-          text: "Succes!",
+          text: response.message,
           icon: "success",
           confirmButtonText: "OK!",
         });
@@ -85,16 +86,6 @@ const Register = () => {
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {/* <input
-          {...formRegister("role", {
-            required: "role wajib diisi",
-            minLength: { value: 4, message: "Minimal 4 karakter" },
-          })}
-          type="text"
-          placeholder="Penulis | Pembaca"
-          className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
-        /> */}
-
         {errors.password && <p>{errors.password.message}</p>}
         <div className="mt-10">
           <button type="submit" className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">

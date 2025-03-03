@@ -24,14 +24,14 @@ const Login = () => {
       if (response.status === 200) {
         Swal.fire({
           title: "Oops!",
-          text: "Email or password incorrect!",
+          text: response.message,
           icon: "warning",
           confirmButtonText: "OK!",
         });
       } else if (response.status === 201) {
         Swal.fire({
           title: "Success!!",
-          text: "Login Succes!",
+          text: response.message,
           icon: "success",
           confirmButtonText: "OK!",
         });

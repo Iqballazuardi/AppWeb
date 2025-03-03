@@ -126,6 +126,7 @@ const UpdateBook = () => {
               type="text"
               id="genre"
               value={book.genre}
+              placeholder="Horor | Misteri | action"
               name="genre"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
