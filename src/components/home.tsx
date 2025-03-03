@@ -142,7 +142,7 @@ const home = () => {
       <div className="container rounded-lg shadow-2xl p-20 text-center w-8xl m-auto mt-5 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
         <h1 className="text-3xl dark:text-white font-semibold mb-6 text-center text-gray-800 underline">Book Recommendations</h1>
 
-        <div className="relative inline-block text-left">
+        <div className="flex justify-end mt-10 mb-10">
           <div>
             <button
               type="button"
@@ -156,7 +156,7 @@ const home = () => {
             </button>
           </div>
           {isOpen && (
-            <div className="origin-bottom-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div className="origin-top-right absolute right-15 top-72 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1">
                 <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("horor")}>
                   Horor
