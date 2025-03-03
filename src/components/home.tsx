@@ -15,28 +15,16 @@ const home = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const totalPages = Math.ceil(books.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
   const newData = books.sort((a, b) => b.id - a.id);
 
   const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const getBooksMutation = useMutation({
-    mutationFn: getBooks,
-    onSuccess: (response) => {
-      if (response.status === 201) {
-        setBooks(response.data);
-      } else if (response.status === 401) {
-        navigate("/login");
-      }
-    },
-    onError: (error) => {
-      console.error("Error searching books:", error);
-    },
-  });
+
   useEffect(() => {
     const loginTimeout = () => {
       if (!Cookies.get("LoginTimeout")) {
@@ -50,6 +38,20 @@ const home = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const getBooksMutation = useMutation({
+    mutationFn: getBooks,
+    onSuccess: (response) => {
+      if (response.status === 201) {
+        setBooks(response.data);
+      } else if (response.status === 401) {
+        navigate("/login");
+      }
+    },
+    onError: (error) => {
+      console.error("Error searching books:", error);
+    },
+  });
 
   const deleteMutation = useMutation({
     mutationFn: deleteBook,
@@ -84,7 +86,6 @@ const home = () => {
     });
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -141,7 +142,7 @@ const home = () => {
       <div className="container rounded-lg shadow-2xl p-20 text-center w-8xl m-auto mt-5 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
         <h1 className="text-3xl dark:text-white font-semibold mb-6 text-center text-gray-800 underline">Book Recommendations</h1>
 
-        <div className="flex justify-end mt-10 mb-5">
+        <div className="relative inline-block text-left">
           <div>
             <button
               type="button"
@@ -157,13 +158,13 @@ const home = () => {
           {isOpen && (
             <div className="origin-bottom-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => handleGenre("horor")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("horor")}>
                   Horor
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => handleGenre("misteri")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("misteri")}>
                   Misteri
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => handleGenre("action")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("action")}>
                   Action
                 </a>
               </div>
