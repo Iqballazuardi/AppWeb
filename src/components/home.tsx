@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
@@ -21,8 +22,8 @@ const home = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  const newData = books.sort((a, b) => b.id - a.id);
 
+  const newData = books.sort((a, b) => b.id - a.id);
   const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
