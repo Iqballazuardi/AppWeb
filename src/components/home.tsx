@@ -195,7 +195,7 @@ const home = () => {
             </button>
           </div>
           {isOpen && (
-            <div className="origin-top-right absolute right-15 top-72 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div className="origin-top-right absolute right-50 top-72 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1">
                 <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Fantasy")}>
                   Fantasy
