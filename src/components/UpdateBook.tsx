@@ -27,7 +27,7 @@ const UpdateBook = () => {
     fetchData();
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (book) {
       setBook({ ...book, [e.target.name]: e.target.value });
     }
@@ -119,19 +119,24 @@ const UpdateBook = () => {
             <label htmlFor="genre" className="block text-lg font-medium text-gray-700">
               Genre
             </label>
-            <input
+            <select
               {...formRegister("genre", {
                 required: "wajib diisi",
               })}
-              type="text"
               id="genre"
-              value={book.genre}
-              placeholder="Horor | Misteri | action"
               name="genre"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
-              required
-              onChange={handleChange}
-            />
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleChange(e)}
+              value={book.genre}
+            >
+              <option value="">Select a genre</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="sci-fi">Science Fiction</option>
+              <option value="mystery">Mystery</option>
+              <option value="romance">Romance</option>
+              <option value="thriller">Thriller</option>
+              <option value="non-fiction">Non-Fiction</option>
+            </select>
           </div>
           <div>
             <label htmlFor="description" className="block text-lg font-medium text-gray-700">
@@ -144,6 +149,7 @@ const UpdateBook = () => {
               id="description"
               name="description"
               value={book.description}
+              rows={10}
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
               onChange={handleChange}

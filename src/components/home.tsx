@@ -110,7 +110,6 @@ const home = () => {
   const genreMutation = useMutation({
     mutationFn: getGenre,
     onSuccess: (response) => {
-      console.log(response.status);
       if (response.status === 201) {
         setBooks(response.data);
         setIsOpen(!isOpen);
@@ -128,7 +127,12 @@ const home = () => {
   });
 
   const handleSearch = (data: string) => {
-    searchMutation.mutate(data);
+    if (data.trim() === "") {
+      getBooksMutation.mutate();
+      return;
+    } else {
+      searchMutation.mutate(data);
+    }
   };
   const handleGenre = (data: string) => {
     genreMutation.mutate(data);
@@ -161,14 +165,23 @@ const home = () => {
           {isOpen && (
             <div className="origin-top-right absolute right-15 top-72 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("horor")}>
-                  Horor
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Fantasy")}>
+                  Fantasy
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("misteri")}>
-                  Misteri
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Science Fiction")}>
+                  Science Fiction
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("action")}>
-                  Action
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Mystery")}>
+                  Mystery
+                </a>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Romance")}>
+                  Romance
+                </a>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Thriller")}>
+                  Thriller
+                </a>
+                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Non-Fiction")}>
+                  Non-Fiction
                 </a>
               </div>
             </div>
@@ -193,23 +206,23 @@ const home = () => {
             <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl">
               <thead className="bg-gray-600 dark:bg-gray-400 text-white">
                 <tr>
-                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Writer</th>
-                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Title</th>
-                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Description</th>
-                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Genre</th>
-                  <th className="py-3 px-6 text-left text-sm font-medium uppercase tracking-wider">Action</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Writer</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Title</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Description</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Genre</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
                 {paginatedData.map((book) => (
-                  <tr key={book.id} className="hover:bg-gray-200">
+                  <tr key={book.id} className="hover:bg-gray-200 dark:hover:bg-gray-200">
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
                       <button className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
-                        <a href={`/books/booksUpdate/${book.id}`}>Update</a>
+                        <a href={`/books/update/${book.id}`}>Update</a>
                       </button>
                       <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
                         Delete
