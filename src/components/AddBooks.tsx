@@ -14,31 +14,32 @@ const AddBooks = () => {
   const mutation = useMutation({
     mutationFn: addBook,
     onSuccess: (response) => {
-      if (response === 201) {
+      if (response.status === 201) {
         Swal.fire({
-          title: "Book added successfully!",
+          title: response.message,
           icon: "success",
         });
         queryClient.invalidateQueries({ queryKey: ["books"] });
         navigate("/");
-      } else if (response === 200) {
+      } else if (response.status === 200) {
         Swal.fire({
-          title: "Book already exists!",
+          title: response.message,
           icon: "warning",
         });
       } else {
+        console.error(response);
         Swal.fire({
-          title: "Something went wrong!",
+          title: response.message,
           icon: "error",
         });
       }
     },
-    onError: (error) => {
-      console.error("Error adding book:", error);
+    onError: () => {
       Swal.fire({
-        title: "Failed to add book, please try again.",
+        title: "Login First!",
         icon: "error",
       });
+      navigate("/login");
     },
   });
 
@@ -121,7 +122,7 @@ const AddBooks = () => {
             ></textarea>
           </div>
           <div>
-            <button type="submit" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">
+            <button type="submit" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer">
               Add Book
             </button>
           </div>

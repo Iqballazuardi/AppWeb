@@ -88,7 +88,7 @@ const Register = () => {
         />
         {errors.password && <p>{errors.password.message}</p>}
         <div className="mt-10">
-          <button type="submit" className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
+          <button type="submit" className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
             Daftar
           </button>
         </div>

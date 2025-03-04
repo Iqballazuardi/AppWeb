@@ -16,7 +16,7 @@ const DarkModeToggle = () => {
   };
 
   return (
-    <button onClick={toggleDarkMode} className="bg-gray-800 text-white hover:bg-amber-200 py-1  px-1 rounded-lg">
+    <button onClick={toggleDarkMode} className="bg-gray-800 text-white hover:bg-amber-200 py-1  px-1 rounded-lg cursor-pointer">
       🌓
     </button>
   );

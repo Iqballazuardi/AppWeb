@@ -10,13 +10,13 @@ import Pagination from "./Pagination";
 import Cookies from "js-cookie";
 import { useMutation } from "@tanstack/react-query";
 
-const itemsPerPage: number = 4;
 const home = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const itemsPerPage: number = 4;
   const totalPages = Math.ceil(books.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -30,10 +30,15 @@ const home = () => {
     const loginTimeout = () => {
       if (!Cookies.get("LoginTimeout")) {
         Cookies.remove("LoginTimeout");
+        localStorage.removeItem("authToken");
+        Swal.fire({
+          title: "Session Expired!",
+          icon: "info",
+        });
         navigate("/login");
       }
     };
-    const interval = setInterval(loginTimeout, 5000);
+    const interval = setInterval(loginTimeout, 1000);
 
     getBooksMutation.mutate();
 
@@ -45,12 +50,15 @@ const home = () => {
     onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
-      } else if (response.status === 401) {
-        navigate("/login");
       }
     },
     onError: (error) => {
       console.error("Error searching books:", error);
+      Swal.fire({
+        title: "Login First!",
+        icon: "error",
+      });
+      navigate("/login");
     },
   });
 
@@ -68,6 +76,14 @@ const home = () => {
 
       Swal.fire("Deleted!", "", "info");
       window.location.reload();
+    },
+    onError: (error) => {
+      console.error("Error deleting book:", error);
+      Swal.fire({
+        title: "Login First!",
+        icon: "error",
+      });
+      navigate("/login");
     },
   });
 
@@ -101,10 +117,20 @@ const home = () => {
           title: response.message,
           icon: "info",
         });
+      } else {
+        Swal.fire({
+          title: "Something wrong!",
+          icon: "error",
+        });
       }
     },
     onError: (error) => {
       console.error("Error searching books:", error);
+      Swal.fire({
+        title: "Login First!",
+        icon: "error",
+      });
+      navigate("/login");
     },
   });
 
@@ -116,7 +142,7 @@ const home = () => {
         setIsOpen(!isOpen);
       } else {
         Swal.fire({
-          title: "No books found by this genre",
+          title: response.message,
           icon: "info",
         });
         setIsOpen(!isOpen);
@@ -124,6 +150,11 @@ const home = () => {
     },
     onError: (error) => {
       console.error("Error searching books:", error);
+      Swal.fire({
+        title: "Login First!",
+        icon: "error",
+      });
+      navigate("/login");
     },
   });
 
@@ -154,7 +185,7 @@ const home = () => {
           <div>
             <button
               type="button"
-              className="inline-flex justify-start w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="cursor-pointer inline-flex justify-start w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               onClick={toggleDropdown}
             >
               Genre
@@ -166,22 +197,22 @@ const home = () => {
           {isOpen && (
             <div className="origin-top-right absolute right-15 top-72 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1">
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Fantasy")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Fantasy")}>
                   Fantasy
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Science Fiction")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Science Fiction")}>
                   Science Fiction
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Mystery")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Mystery")}>
                   Mystery
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Romance")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Romance")}>
                   Romance
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Thriller")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Thriller")}>
                   Thriller
                 </a>
-                <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => handleGenre("Non-Fiction")}>
+                <a className="block px-4 py-2 text-sm text-gray-700 bg-white cursor-pointer" onClick={() => handleGenre("Non-Fiction")}>
                   Non-Fiction
                 </a>
               </div>
@@ -192,7 +223,7 @@ const home = () => {
         <div>
           <div className="flex justify-start mt-10 mb-5">
             <input type="text" id="searchInput" placeholder="Search for book by title" className="px-4 py-2 border rounded-lg  dark:bg-gray-200" value={searchTerm} onChange={handleInputChange} />
-            <button className=" px-4 py-2 hover:border rounded-lg ml-2" onClick={() => handleSearch(searchTerm)}>
+            <button className="cursor-pointer px-4 py-2 hover:border rounded-lg ml-2" onClick={() => handleSearch(searchTerm)}>
               🔎
             </button>
           </div>
@@ -207,25 +238,25 @@ const home = () => {
             <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl">
               <thead className="bg-gray-600 dark:bg-gray-400 text-white">
                 <tr>
-                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Writer</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Title</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Description</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Genre</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-sm font-medium uppercase tracking-wider">Action</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Writer</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Title</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Description</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Genre</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
                 {paginatedData.map((book) => (
                   <tr key={book.id} className="hover:bg-gray-200 dark:hover:bg-gray-200">
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900">{book.author}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.title}</td>
+                    <td className="py-4 px-6 text-md font-medium text-gray-700">{book.author}</td>
+                    <td className="py-4 px-6 text-md font-medium text-gray-700">{book.title}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
-                      <button className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2">
-                        <a href={`/books/update/${book.id}`}>Update</a>
+                      <button className="cursor-pointer bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => navigate(`/books/update/${book.id}`)}>
+                        Update
                       </button>
-                      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
+                      <button className="cursor-pointer bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
                         Delete
                       </button>
                     </td>
@@ -237,8 +268,8 @@ const home = () => {
         </div>
 
         <div className="flex justify-end mt-10">
-          <button className=" bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">
-            <a href="/books/addBooks"> Add Recomendation</a>
+          <button className="cursor-pointer bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg" onClick={() => navigate("/books/addBooks")}>
+            Add Recomendation
           </button>
         </div>
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />

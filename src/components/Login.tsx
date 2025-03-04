@@ -37,7 +37,7 @@ const Login = () => {
         });
 
         localStorage.setItem("authToken", response.token);
-        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 5000);
+        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
         Cookies.set("LoginTimeout", "true", {
           expires: inFifteenMinutes,
         });
@@ -90,12 +90,15 @@ const Login = () => {
         />
         {errors.password && <p>{errors.password.message}</p>}
         <div className="mt-10">
-          <button type="submit" className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
+          <button type="submit" className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
             Login 🔐
           </button>
         </div>
         <div className="mt-5">
-          <button className="w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group" onClick={() => navigate("/registrasi")}>
+          <button
+            className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group"
+            onClick={() => navigate("/registrasi")}
+          >
             Daftar 🧾
           </button>
         </div>

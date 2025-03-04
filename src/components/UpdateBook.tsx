@@ -53,8 +53,12 @@ const UpdateBook = () => {
         });
       }
     },
-    onError: (error) => {
-      Swal.fire("Error!", error instanceof Error ? error.message : "An unknown error occurred", "error");
+    onError: () => {
+      Swal.fire({
+        title: "Login First!",
+        icon: "error",
+      });
+      navigate("/login");
     },
   });
 

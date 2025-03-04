@@ -72,7 +72,7 @@ export const getGenre = async (genre: string) => {
 export const addBook = async (bookData: { author: string; title: string; genre: string; description: string }) => {
   try {
     const response = await axiosInstance.post("/books/add", bookData);
-    return response.status;
+    return response.data;
   } catch (error) {
     console.error("Error adding book:", error);
     throw error;

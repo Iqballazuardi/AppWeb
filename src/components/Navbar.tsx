@@ -44,7 +44,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <button className="text-gray-300 hover:text-white" onClick={logout}>
+            <button className="text-gray-300 hover:text-white cursor-pointer" onClick={logout}>
               Logout
             </button>
           </li>
