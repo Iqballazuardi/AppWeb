@@ -26,19 +26,19 @@ const home = () => {
   const newData = books.sort((a, b) => b.id - a.id);
   const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  const loginTimeout = () => {
+    if (!Cookies.get("LoginTimeout")) {
+      Cookies.remove("LoginTimeout");
+      localStorage.removeItem("authToken");
+      Swal.fire({
+        title: "Session Expired!",
+        icon: "info",
+      });
+      navigate("/login");
+    }
+  };
   useEffect(() => {
-    const loginTimeout = () => {
-      if (!Cookies.get("LoginTimeout")) {
-        Cookies.remove("LoginTimeout");
-        localStorage.removeItem("authToken");
-        Swal.fire({
-          title: "Session Expired!",
-          icon: "info",
-        });
-        navigate("/login");
-      }
-    };
-    const interval = setInterval(loginTimeout, 1000);
+    const interval = setInterval(loginTimeout, 5000);
 
     getBooksMutation.mutate();
 
@@ -50,15 +50,20 @@ const home = () => {
     onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
+      } else if (response.status === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
       }
     },
     onError: (error) => {
       console.error("Error searching books:", error);
       Swal.fire({
-        title: "Login First!",
+        title: "Something wrong!",
         icon: "error",
       });
-      navigate("/login");
     },
   });
 
@@ -67,6 +72,12 @@ const home = () => {
     onSuccess: (response) => {
       if (response === 200) {
         Swal.fire("Delete!", "", "success");
+      } else if (response === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
       } else {
         Swal.fire({
           title: "Something wrong!",
@@ -80,10 +91,9 @@ const home = () => {
     onError: (error) => {
       console.error("Error deleting book:", error);
       Swal.fire({
-        title: "Login First!",
+        title: error.message,
         icon: "error",
       });
-      navigate("/login");
     },
   });
 
@@ -117,6 +127,12 @@ const home = () => {
           title: response.message,
           icon: "info",
         });
+      } else if (response.status === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
       } else {
         Swal.fire({
           title: "Something wrong!",
@@ -125,12 +141,11 @@ const home = () => {
       }
     },
     onError: (error) => {
-      console.error("Error searching books:", error);
       Swal.fire({
-        title: "Login First!",
+        title: error.message,
         icon: "error",
       });
-      navigate("/login");
+      console.error("Error searching books:", error);
     },
   });
 
@@ -140,6 +155,12 @@ const home = () => {
       if (response.status === 201) {
         setBooks(response.data);
         setIsOpen(!isOpen);
+      } else if (response.status === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
       } else {
         Swal.fire({
           title: response.message,
@@ -151,10 +172,9 @@ const home = () => {
     onError: (error) => {
       console.error("Error searching books:", error);
       Swal.fire({
-        title: "Login First!",
+        title: error.message,
         icon: "error",
       });
-      navigate("/login");
     },
   });
 
@@ -250,7 +270,7 @@ const home = () => {
                   <tr key={book.id} className="hover:bg-gray-200 dark:hover:bg-gray-200">
                     <td className="py-4 px-6 text-md font-medium text-gray-700">{book.author}</td>
                     <td className="py-4 px-6 text-md font-medium text-gray-700">{book.title}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.description}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700 w-2xl">{book.description}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
                       <button className="cursor-pointer bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => navigate(`/books/update/${book.id}`)}>

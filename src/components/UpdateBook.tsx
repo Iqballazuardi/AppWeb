@@ -13,7 +13,11 @@ const UpdateBook = () => {
   const navigate = useNavigate();
   const queryClient = new QueryClient();
   const [book, setBook] = useState<Book | null>(null);
-  const { register: formRegister, handleSubmit } = useForm<Book>();
+  const {
+    register: formRegister,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Book>();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -46,6 +50,12 @@ const UpdateBook = () => {
         Swal.fire("Saved!", "", "success");
         queryClient.invalidateQueries({ queryKey: ["updateBook"] });
         navigate("/");
+      } else if (response === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
       } else {
         Swal.fire({
           title: "Something wrong!",
@@ -53,12 +63,11 @@ const UpdateBook = () => {
         });
       }
     },
-    onError: () => {
+    onError: (e) => {
       Swal.fire({
-        title: "Login First!",
+        title: e.message,
         icon: "error",
       });
-      navigate("/login");
     },
   });
 
@@ -101,6 +110,7 @@ const UpdateBook = () => {
               required
               onChange={handleChange}
             />
+            {errors.author && <p className="text-red-500">{errors.author.message}</p>}
           </div>
           <div>
             <label htmlFor="title" className="block text-lg font-medium text-gray-700">
@@ -118,6 +128,8 @@ const UpdateBook = () => {
               required
               onChange={handleChange}
             />
+
+            {errors.title && <p className="text-red-500">{errors.title.message}</p>}
           </div>
           <div>
             <label htmlFor="genre" className="block text-lg font-medium text-gray-700">
@@ -125,7 +137,7 @@ const UpdateBook = () => {
             </label>
             <select
               {...formRegister("genre", {
-                required: "wajib diisi",
+                required: "Pilih salah satu Genre",
               })}
               id="genre"
               name="genre"
@@ -141,6 +153,8 @@ const UpdateBook = () => {
               <option value="thriller">Thriller</option>
               <option value="non-fiction">Non-Fiction</option>
             </select>
+
+            {errors.genre && <p className="text-red-500">{errors.genre.message}</p>}
           </div>
           <div>
             <label htmlFor="description" className="block text-lg font-medium text-gray-700">
@@ -158,6 +172,8 @@ const UpdateBook = () => {
               required
               onChange={handleChange}
             ></textarea>
+
+            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
           </div>
           <div>
             <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg" onClick={handleSubmit(onSubmit)}>

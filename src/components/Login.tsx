@@ -37,7 +37,7 @@ const Login = () => {
         });
 
         localStorage.setItem("authToken", response.token);
-        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
+        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 5000);
         Cookies.set("LoginTimeout", "true", {
           expires: inFifteenMinutes,
         });
@@ -78,7 +78,7 @@ const Login = () => {
           placeholder="Email"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {errors.email && <p>{errors.email.message}</p>}
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         <input
           {...formRegister("password", {
             required: "Password wajib diisi",
@@ -88,7 +88,7 @@ const Login = () => {
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && <p className="text-red-500">{errors.password.message}</p>}
         <div className="mt-10">
           <button type="submit" className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
             Login 🔐

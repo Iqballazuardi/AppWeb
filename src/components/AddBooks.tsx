@@ -26,6 +26,12 @@ const AddBooks = () => {
           title: response.message,
           icon: "warning",
         });
+      } else if (response.status === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
       } else {
         console.error(response);
         Swal.fire({
@@ -34,16 +40,20 @@ const AddBooks = () => {
         });
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error);
       Swal.fire({
-        title: "Login First!",
+        title: error.message,
         icon: "error",
       });
-      navigate("/login");
     },
   });
 
-  const { register: formRegister, handleSubmit } = useForm<Book>();
+  const {
+    register: formRegister,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Book>();
 
   const onSubmit = (data: Book) => {
     mutation.mutate(data);
@@ -69,6 +79,7 @@ const AddBooks = () => {
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
             />
+            {errors.author && <p className="text-red-500">{errors.author.message}</p>}
           </div>
           <div>
             <label htmlFor="title" className="block text-lg font-medium text-gray-700">
@@ -84,6 +95,7 @@ const AddBooks = () => {
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
             />
+            {errors.title && <p className="text-red-500">{errors.title.message}</p>}
           </div>
           <div>
             <label htmlFor="genre" className="block text-lg font-medium text-gray-700">
@@ -91,7 +103,7 @@ const AddBooks = () => {
             </label>
             <select
               {...formRegister("genre", {
-                required: "wajib diisi",
+                required: "Pilih Salah satu Genre",
               })}
               id="genre"
               name="genre"
@@ -105,6 +117,7 @@ const AddBooks = () => {
               <option value="thriller">Thriller</option>
               <option value="non-fiction">Non-Fiction</option>
             </select>
+            {errors.genre && <p className="text-red-500">{errors.genre.message}</p>}
           </div>
           <div>
             <label htmlFor="description" className="block text-lg font-medium text-gray-700">
@@ -120,6 +133,7 @@ const AddBooks = () => {
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
             ></textarea>
+            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
           </div>
           <div>
             <button type="submit" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer">
