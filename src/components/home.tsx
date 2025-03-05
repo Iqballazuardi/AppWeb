@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import Pagination from "./Pagination";
 import Cookies from "js-cookie";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const home = () => {
   const navigate = useNavigate();
@@ -17,6 +17,8 @@ const home = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage: number = 4;
+
+  const queryClient = useQueryClient();
   const totalPages = Math.ceil(books.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -34,11 +36,13 @@ const home = () => {
         title: "Session Expired!",
         icon: "info",
       });
+      queryClient.invalidateQueries({ queryKey: ["home"] });
       navigate("/login");
     }
   };
+
   useEffect(() => {
-    const interval = setInterval(loginTimeout, 5000);
+    const interval = setInterval(loginTimeout, 1000);
 
     getBooksMutation.mutate();
 
@@ -64,6 +68,7 @@ const home = () => {
         title: "Something wrong!",
         icon: "error",
       });
+      navigate("/login");
     },
   });
 
@@ -122,6 +127,7 @@ const home = () => {
     onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
+        setCurrentPage(1);
       } else if (response.status === 200) {
         Swal.fire({
           title: response.message,
@@ -255,7 +261,7 @@ const home = () => {
               <p className="text-2xl font-medium text-red-500">Tidak ada data buku tersedia</p>
             </div>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl">
+            <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl table-auto w-auto">
               <thead className="bg-gray-600 dark:bg-gray-400 text-white">
                 <tr>
                   <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Writer</th>
@@ -267,8 +273,8 @@ const home = () => {
               </thead>
               <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
                 {paginatedData.map((book) => (
-                  <tr key={book.id} className="hover:bg-gray-200 dark:hover:bg-gray-200">
-                    <td className="py-4 px-6 text-md font-medium text-gray-700">{book.author}</td>
+                  <tr key={book.id} className="hover:bg-gray-200 dark:hover:bg-gray-200 hover:scale-99">
+                    <td className="py-4 px-6 text-md font-medium text-gray-700 ">{book.author}</td>
                     <td className="py-4 px-6 text-md font-medium text-gray-700">{book.title}</td>
                     <td className="py-4 px-6 text-sm text-gray-700 w-2xl">{book.description}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>

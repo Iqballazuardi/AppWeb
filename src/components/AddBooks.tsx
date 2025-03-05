@@ -64,7 +64,7 @@ const AddBooks = () => {
       <Navbar />
       <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-100 dark:bg-gray-400 dark:shadow-gray-200 ">
         <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800">Add Book Recommendation</h1>
-        <form id="bookForm" className="space-y-4 " onSubmit={handleSubmit(onSubmit)}>
+        <form id="bookForm" className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor="author" className="block text-lg font-medium text-gray-700">
               Author

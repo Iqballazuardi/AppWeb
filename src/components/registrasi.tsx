@@ -3,9 +3,10 @@ import { registrasi } from "../services/api";
 import { User } from "../models/user";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Register = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const {
@@ -32,6 +33,8 @@ const Register = () => {
           icon: "success",
           confirmButtonText: "OK!",
         });
+
+        queryClient.invalidateQueries({ queryKey: ["registrasi"] });
         navigate("/login");
       } else {
         Swal.fire({
