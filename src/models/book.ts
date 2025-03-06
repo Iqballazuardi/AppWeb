@@ -4,4 +4,5 @@ export interface Book {
   author: string;
   genre: string;
   description: string;
+  borrowstatus: string;
 }

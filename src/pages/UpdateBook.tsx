@@ -1,6 +1,6 @@
 import { Book } from "../models/book";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getBookById } from "../services/api";
 import { updateBookOnApi } from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,10 +12,10 @@ import Navbar from "../components/Navbar";
 const UpdateBook = () => {
   const navigate = useNavigate();
   const queryClient = new QueryClient();
-  const [book, setBook] = useState<Book | null>(null);
   const {
     register: formRegister,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<Book>();
   const { id } = useParams<{ id: string }>();
@@ -25,17 +25,17 @@ const UpdateBook = () => {
       if (id !== undefined) {
         const bookId = parseInt(id);
         const response = await getBookById(bookId);
-        setBook(response.data[0]);
+        const bookData = response.data[0];
+
+        if (bookData) {
+          Object.keys(bookData).forEach((key) => {
+            setValue(key as keyof Book, bookData[key]);
+          });
+        }
       }
     };
     fetchData();
-  }, [id]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (book) {
-      setBook({ ...book, [e.target.name]: e.target.value });
-    }
-  };
+  }, [id, setValue]);
 
   const mutation = useMutation({
     mutationFn: (data: Book) => {
@@ -86,14 +86,13 @@ const UpdateBook = () => {
       }
     });
   };
-  if (!book) return <div>Loading...</div>;
 
   return (
     <>
       <Navbar />
       <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-100  dark:bg-gray-400 dark:shadow-gray-200 ">
         <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800">Update Book </h1>
-        <form id="bookForm" className="space-y-4">
+        <form id="bookForm" className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor="writer" className="block text-lg font-medium text-gray-700">
               Writer
@@ -103,12 +102,10 @@ const UpdateBook = () => {
                 required: "wajib diisi",
               })}
               type="text"
-              value={book.author}
               id="author"
               name="author"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
-              onChange={handleChange}
             />
             {errors.author && <p className="text-red-500">{errors.author.message}</p>}
           </div>
@@ -122,11 +119,9 @@ const UpdateBook = () => {
               })}
               type="text"
               id="title"
-              value={book.title}
               name="title"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
-              onChange={handleChange}
             />
 
             {errors.title && <p className="text-red-500">{errors.title.message}</p>}
@@ -142,8 +137,6 @@ const UpdateBook = () => {
               id="genre"
               name="genre"
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleChange(e)}
-              value={book.genre}
             >
               <option value="">Select a genre</option>
               <option value="fantasy">Fantasy</option>
@@ -166,17 +159,15 @@ const UpdateBook = () => {
               })}
               id="description"
               name="description"
-              value={book.description}
               rows={10}
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
-              onChange={handleChange}
             ></textarea>
 
             {errors.description && <p className="text-red-500">{errors.description.message}</p>}
           </div>
           <div>
-            <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg" onClick={handleSubmit(onSubmit)}>
+            <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">
               🔧 Update Book
             </button>
           </div>

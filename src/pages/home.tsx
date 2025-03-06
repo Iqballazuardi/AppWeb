@@ -28,6 +28,8 @@ const home = () => {
   const newData = books.sort((a, b) => b.id - a.id);
   const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  paginatedData.map((item) => console.log(item.borrowstatus));
+
   const loginTimeout = () => {
     if (!Cookies.get("LoginTimeout")) {
       Cookies.remove("LoginTimeout");
@@ -52,6 +54,7 @@ const home = () => {
     onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
+        console.log(books);
       } else if (response.status === 401) {
         Swal.fire({
           title: "Login First!",
@@ -262,6 +265,7 @@ const home = () => {
                   <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Title</th>
                   <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Description</th>
                   <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Genre</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Status</th>
                   <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
@@ -272,10 +276,12 @@ const home = () => {
                     <td className="py-4 px-6 text-md font-medium text-gray-700">{book.title}</td>
                     <td className="py-4 px-6 text-sm text-gray-700 w-2xl">{book.description}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{book.borrowstatus}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
                       <button className="cursor-pointer bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => navigate(`/books/update/${book.id}`)}>
                         Update
                       </button>
+                      <button className="cursor-pointer bg-teal-500 hover:bg-teal  -700 text-white font-bold py-2 px-4 rounded-lg m-2">Borrow</button>
                       <button className="cursor-pointer bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
                         Delete
                       </button>

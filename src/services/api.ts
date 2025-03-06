@@ -107,4 +107,14 @@ export const deleteBook = async (id: number) => {
   }
 };
 
+export const borrowBook = async (data: { userId: number; bookId: number }) => {
+  try {
+    const response = await axiosInstance.post(`/books/borrow`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error borrowing book:", error);
+    throw error;
+  }
+};
+
 export default axiosInstance;
