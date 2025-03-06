@@ -51,16 +51,18 @@ AppWeb/
    │
    └──src/
        ├── components/
-       │   ├── AddBook.tsx       // Komponen Tambah buku
        │   ├── DarkMode.tsx      // Komponen Dark mode
        │   ├── DropDown.tsx      // Komponen Drop down
-       │   ├── Home.tsx          // Komponen Home, daftar buku
-       │   ├── Login.tsx         // Komponen Login
        │   ├── Navbar.tsx        // Komponen Navbar
-       │   ├── Pagination.tsx    // Komponen Pagination
-       │   ├── Registrasi.tsx    // Komponen Registrasi
-       │   └── UpdateBook.tsx    // Komponen notifikasi dengan swal
+       │   └── Pagination.tsx    // Komponen Pagination
        │
+       │
+       ├── pages/
+       │   ├── AddBook.tsx       // Pages Tambah buku
+       │   ├── Home.tsx          // Pages Home, daftar buku
+       │   ├── Login.tsx         // Pages Login
+       │   ├── Registrasi.tsx    // Pages Registrasi
+       │   └── UpdateBook.tsx    // Pages Update Book
        ├── models/
        │   ├── book.ts           // interface book
        │   └── user.ts           // interface user

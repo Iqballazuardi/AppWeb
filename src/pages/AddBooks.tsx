@@ -1,11 +1,11 @@
-import Navbar from "./Navbar";
-import { useForm } from "react-hook-form";
 import { Book } from "../models/book";
 import { addBook } from "../services/api";
-
-import Swal from "sweetalert2";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import Swal from "sweetalert2";
+import Navbar from "../components/Navbar";
 
 const AddBooks = () => {
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ const AddBooks = () => {
         });
         navigate("/login");
       } else {
-        console.error(response);
         Swal.fire({
           title: response.message,
           icon: "error",
@@ -41,7 +40,6 @@ const AddBooks = () => {
       }
     },
     onError: (error) => {
-      console.log(error);
       Swal.fire({
         title: error.message,
         icon: "error",

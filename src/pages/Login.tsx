@@ -1,14 +1,17 @@
-import { useForm } from "react-hook-form";
-import { registrasi } from "../services/api";
 import { User } from "../models/user";
-import Swal from "sweetalert2";
+import { login } from "../services/api";
+import { useForm } from "react-hook-form";
+
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const Register = () => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import "react-toastify/dist/ReactToastify.css";
 
+const Login = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     register: formRegister,
     handleSubmit,
@@ -16,9 +19,8 @@ const Register = () => {
   } = useForm<User>();
 
   const mutation = useMutation({
-    mutationFn: registrasi,
+    mutationFn: login,
     onSuccess: (response) => {
-      console.log(response);
       if (response.status === 200) {
         Swal.fire({
           title: "Oops!",
@@ -28,27 +30,31 @@ const Register = () => {
         });
       } else if (response.status === 201) {
         Swal.fire({
-          title: "Succes!",
+          title: "Success!!",
           text: response.message,
           icon: "success",
           confirmButtonText: "OK!",
         });
-
-        queryClient.invalidateQueries({ queryKey: ["registrasi"] });
-        navigate("/login");
+        localStorage.setItem("authToken", response.token);
+        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
+        Cookies.set("LoginTimeout", "true", {
+          expires: inFifteenMinutes,
+        });
+        queryClient.invalidateQueries({ queryKey: ["login"] });
+        navigate("/");
       } else {
         Swal.fire({
-          title: "Error!",
-          text: "Register failed",
+          title: "????!!!!",
+          text: "Login failed",
           icon: "error",
-          confirmButtonText: "OK!",
+          confirmButtonText: "TRY AGAIN!",
         });
       }
     },
     onError: () => {
       Swal.fire({
-        title: "Error!",
-        text: "Register failed",
+        title: "Oops!",
+        text: "Terjadi kesalahan saat login!",
         icon: "error",
         confirmButtonText: "OK!",
       });
@@ -60,8 +66,8 @@ const Register = () => {
   };
 
   return (
-    <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
-      <h2 className="text-3xl font-bold dark:text-zinc-200"> Halaman Registrasis</h2>
+    <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-gray-200 dark:bg-gray-600 dark:shadow-gray-600">
+      <h2 className="text-3xl font-bold "> Halaman Login 🚀</h2>
       <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit(onSubmit)}>
         <input
           {...formRegister("email", {
@@ -71,15 +77,7 @@ const Register = () => {
           placeholder="Email"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {errors.email && <p>{errors.email.message}</p>}
-        <input
-          {...formRegister("username", {
-            required: "username wajib diisi",
-          })}
-          type="text"
-          placeholder="Username"
-          className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
-        />
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         <input
           {...formRegister("password", {
             required: "Password wajib diisi",
@@ -89,15 +87,22 @@ const Register = () => {
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && <p className="text-red-500">{errors.password.message}</p>}
         <div className="mt-10">
           <button type="submit" className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
-            Daftar
+            Login 🔐
+          </button>
+        </div>
+        <div className="mt-5">
+          <button
+            className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group"
+            onClick={() => navigate("/registrasi")}
+          >
+            Daftar 🧾
           </button>
         </div>
       </form>
     </div>
   );
 };
-
-export default Register;
+export default Login;

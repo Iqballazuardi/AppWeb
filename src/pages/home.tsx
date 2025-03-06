@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState, useEffect } from "react";
-import Navbar from "./Navbar";
-import { getBooks, deleteBook, searchBook, getGenre } from "../services/api";
 import { Book } from "../models/book";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
-import Pagination from "./Pagination";
-import Cookies from "js-cookie";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getBooks, deleteBook, searchBook, getGenre } from "../services/api";
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import Navbar from "../components/Navbar";
+import Pagination from "../components/Pagination";
 
 const home = () => {
   const navigate = useNavigate();
@@ -43,9 +43,7 @@ const home = () => {
 
   useEffect(() => {
     const interval = setInterval(loginTimeout, 1000);
-
     getBooksMutation.mutate();
-
     return () => clearInterval(interval);
   }, []);
 
@@ -62,10 +60,9 @@ const home = () => {
         navigate("/login");
       }
     },
-    onError: (error) => {
-      console.error("Error searching books:", error);
+    onError: (e) => {
       Swal.fire({
-        title: "Something wrong!",
+        title: e.message,
         icon: "error",
       });
       navigate("/login");
@@ -94,7 +91,6 @@ const home = () => {
       window.location.reload();
     },
     onError: (error) => {
-      console.error("Error deleting book:", error);
       Swal.fire({
         title: error.message,
         icon: "error",
@@ -151,7 +147,6 @@ const home = () => {
         title: error.message,
         icon: "error",
       });
-      console.error("Error searching books:", error);
     },
   });
 
@@ -176,7 +171,6 @@ const home = () => {
       }
     },
     onError: (error) => {
-      console.error("Error searching books:", error);
       Swal.fire({
         title: error.message,
         icon: "error",

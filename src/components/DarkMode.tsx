@@ -1,4 +1,3 @@
-// DarkModeToggle.js
 import { useEffect } from "react";
 
 const DarkModeToggle = () => {

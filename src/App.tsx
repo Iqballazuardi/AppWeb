@@ -1,11 +1,11 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Home from "./pages/home.js";
+import Login from "./pages/Login.js";
+import AddBooks from "./pages/AddBooks.js";
+import Register from "./pages/registrasi.js";
+import UpdateBook from "./pages/UpdateBook.js";
 import NotFound from "./components/NotFound.js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/home";
-import Login from "./components/Login";
-import AddBooks from "./components/AddBooks.js";
-import Register from "./components/registrasi";
-import UpdateBook from "./components/UpdateBook";
 
 const queryClient = new QueryClient();
 function App() {

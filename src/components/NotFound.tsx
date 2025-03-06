@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
   const navigate = useNavigate();

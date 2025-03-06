@@ -1,17 +1,14 @@
-import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 import { User } from "../models/user";
-import { login } from "../services/api";
-
-import Cookies from "js-cookie";
+import { useForm } from "react-hook-form";
+import { registrasi } from "../services/api";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-
-const Login = () => {
-  const navigate = useNavigate();
+const Register = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const {
     register: formRegister,
     handleSubmit,
@@ -19,7 +16,7 @@ const Login = () => {
   } = useForm<User>();
 
   const mutation = useMutation({
-    mutationFn: login,
+    mutationFn: registrasi,
     onSuccess: (response) => {
       if (response.status === 200) {
         Swal.fire({
@@ -30,32 +27,27 @@ const Login = () => {
         });
       } else if (response.status === 201) {
         Swal.fire({
-          title: "Success!!",
+          title: "Succes!",
           text: response.message,
           icon: "success",
           confirmButtonText: "OK!",
         });
 
-        localStorage.setItem("authToken", response.token);
-        const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 1000);
-        Cookies.set("LoginTimeout", "true", {
-          expires: inFifteenMinutes,
-        });
-        queryClient.invalidateQueries({ queryKey: ["login"] });
-        navigate("/");
+        queryClient.invalidateQueries({ queryKey: ["registrasi"] });
+        navigate("/login");
       } else {
         Swal.fire({
-          title: "????????!",
-          text: "Login failed",
+          title: "Error!",
+          text: "Register failed",
           icon: "error",
-          confirmButtonText: "TRY AGAIN!",
+          confirmButtonText: "OK!",
         });
       }
     },
-    onError: () => {
+    onError: (e) => {
       Swal.fire({
-        title: "Oops!",
-        text: "Terjadi kesalahan saat login!",
+        title: e.message,
+        text: "Register failed",
         icon: "error",
         confirmButtonText: "OK!",
       });
@@ -67,8 +59,8 @@ const Login = () => {
   };
 
   return (
-    <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-gray-200 dark:bg-gray-600 dark:shadow-gray-600">
-      <h2 className="text-3xl font-bold "> Halaman Login 🚀</h2>
+    <div className="container rounded-lg shadow-2xl p-20 text-center w-4xl m-auto mt-30 bg-zinc-200 dark:bg-gray-600 dark:shadow-gray-600">
+      <h2 className="text-3xl font-bold dark:text-zinc-200"> Halaman Registrasis</h2>
       <form className="w-full px-4 mb-8 mt-5" onSubmit={handleSubmit(onSubmit)}>
         <input
           {...formRegister("email", {
@@ -78,7 +70,15 @@ const Login = () => {
           placeholder="Email"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+        {errors.email && <p>{errors.email.message}</p>}
+        <input
+          {...formRegister("username", {
+            required: "username wajib diisi",
+          })}
+          type="text"
+          placeholder="Username"
+          className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
+        />
         <input
           {...formRegister("password", {
             required: "Password wajib diisi",
@@ -88,22 +88,15 @@ const Login = () => {
           placeholder="Password"
           className="w-full p-3 mt-2 rounded-lg bg-zinc-200 text-secondary focus:outline-none focus:ring-primary focus:ring-1"
         />
-        {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+        {errors.password && <p>{errors.password.message}</p>}
         <div className="mt-10">
           <button type="submit" className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group">
-            Login 🔐
-          </button>
-        </div>
-        <div className="mt-5">
-          <button
-            className="cursor-pointer w-full p-3 text-base bg-teal-500 hover:bg-teal-700 text-white font-semibold transition  duration-500 bg-primary rounded-xl hover:opacity-80 hover:shadow-2xl group"
-            onClick={() => navigate("/registrasi")}
-          >
-            Daftar 🧾
+            Daftar
           </button>
         </div>
       </form>
     </div>
   );
 };
-export default Login;
+
+export default Register;

@@ -15,14 +15,14 @@ Deadline Penyelesaian: 14 Hari.
    - ✅ Buat halaman Dashboard setelah login berhasil.
      - Tampilkan data dari API (contoh: daftar produk).✅
      - Endpoint API: GET /products.✅
-     - Gunakan React Query untuk fetching data.
+     - Gunakan React Query untuk fetching data.✅
    - ✅ Buat fitur logout.
      - Hapus token dari localStorage.✅
      - Redirect ke halaman login.✅
 3. CRUD Data (Produk atau User)
    - ✅ Buat halaman untuk Menampilkan, Menambahkan, Mengedit, dan Menghapus Data.✅
      - Tampilkan daftar produk dalam table/grid (disarankan menggunakan data table).✅
-     - Tambahkan fitur pencarian & filter.
+     - Tambahkan fitur pencarian & filter.✅
      - Gunakan modal atau halaman terpisah untuk tambah/edit data. ✅
      - Integrasi API:
        - POST /products (Tambah data). ✅
