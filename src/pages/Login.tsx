@@ -21,6 +21,7 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
+      console.log(response);
       if (response.status === 200) {
         Swal.fire({
           title: "Oops!",
@@ -36,6 +37,7 @@ const Login = () => {
           confirmButtonText: "OK!",
         });
         localStorage.setItem("authToken", response.token);
+        localStorage.setItem("userId", response.data.id);
         const inFifteenMinutes = new Date(new Date().getTime() + 1 * 60 * 5000);
         Cookies.set("LoginTimeout", "true", {
           expires: inFifteenMinutes,

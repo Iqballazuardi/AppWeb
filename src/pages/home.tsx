@@ -4,14 +4,17 @@ import { Book } from "../models/book";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getBooks, deleteBook, searchBook, getGenre } from "../services/api";
+import { getBooks, deleteBook, searchBook, getGenre, borrowBook, returnBook } from "../services/api";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import Navbar from "../components/Navbar";
 import Pagination from "../components/Pagination";
+import useAutoLogout from "../components/timeLogout";
 
 const home = () => {
+  useAutoLogout(6000000);
   const navigate = useNavigate();
+  const [userID, setUserID] = useState(0);
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -25,10 +28,8 @@ const home = () => {
     setCurrentPage(page);
   };
 
-  const newData = books.sort((a, b) => b.id - a.id);
+  const newData = books.sort((a, b) => b.bookid - a.bookid);
   const paginatedData = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  paginatedData.map((item) => console.log(item.borrowstatus));
 
   const loginTimeout = () => {
     if (!Cookies.get("LoginTimeout")) {
@@ -46,6 +47,10 @@ const home = () => {
   useEffect(() => {
     const interval = setInterval(loginTimeout, 1000);
     getBooksMutation.mutate();
+    const storedID = localStorage.getItem("userId");
+    if (storedID) {
+      setUserID(parseInt(storedID));
+    }
     return () => clearInterval(interval);
   }, []);
 
@@ -54,7 +59,6 @@ const home = () => {
     onSuccess: (response) => {
       if (response.status === 201) {
         setBooks(response.data);
-        console.log(books);
       } else if (response.status === 401) {
         Swal.fire({
           title: "Login First!",
@@ -71,7 +75,6 @@ const home = () => {
       navigate("/login");
     },
   });
-
   const deleteMutation = useMutation({
     mutationFn: deleteBook,
     onSuccess: (response) => {
@@ -152,7 +155,6 @@ const home = () => {
       });
     },
   });
-
   const genreMutation = useMutation({
     mutationFn: getGenre,
     onSuccess: (response) => {
@@ -181,6 +183,70 @@ const home = () => {
     },
   });
 
+  const borrowMutation = useMutation({
+    mutationFn: borrowBook,
+    onSuccess: (response) => {
+      if (response.status === 201) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Borrow this book",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      } else if (response.status === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
+      } else {
+        Swal.fire({
+          title: response.message,
+          icon: "error",
+        });
+      }
+    },
+  });
+
+  const returnMutation = useMutation({
+    mutationFn: returnBook,
+    onSuccess: (response) => {
+      if (response === 200) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Return this book",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      } else if (response === 401) {
+        Swal.fire({
+          title: "Login First!",
+          icon: "error",
+        });
+        navigate("/login");
+      } else {
+        Swal.fire({
+          title: "Something Wrong!",
+          icon: "error",
+        });
+      }
+    },
+  });
+
   const handleSearch = (data: string) => {
     if (data.trim() === "") {
       getBooksMutation.mutate();
@@ -191,6 +257,19 @@ const home = () => {
   };
   const handleGenre = (data: string) => {
     genreMutation.mutate(data);
+  };
+  const handleBorrow = (userId: number, bookId: number) => {
+    borrowMutation.mutate({ userId, bookId });
+  };
+  const handleReturn = (userId: number, bookuserId: number, bookId: number) => {
+    if (userId !== bookuserId) {
+      Swal.fire({
+        title: "You are not the borrower of this book!",
+        icon: "error",
+      });
+      return;
+    }
+    returnMutation.mutate({ userId, bookId });
   };
 
   const toggleDropdown = () => {
@@ -261,28 +340,35 @@ const home = () => {
             <table className="min-w-full divide-y divide-gray-300 shadow-2xl rounded-4xl table-auto w-auto">
               <thead className="bg-gray-600 dark:bg-gray-400 text-white">
                 <tr>
-                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Writer</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Title</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Description</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Genre</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Status</th>
-                  <th className="py-3 px-6 text-shadow-md text-center text-lg font-medium uppercase tracking-wider">Action</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Writer</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Title</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Description</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Genre</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Status</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Borrowby</th>
+                  <th className="py-3 px-6 text-shadow-md text-center text-md  font-medium uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-200 divide-y divide-gray-300">
-                {paginatedData.map((book) => (
-                  <tr key={book.id} className="hover:bg-gray-200 dark:hover:bg-gray-200 hover:scale-99">
-                    <td className="py-4 px-6 text-md font-medium text-gray-700 ">{book.author}</td>
-                    <td className="py-4 px-6 text-md font-medium text-gray-700">{book.title}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700 w-2xl">{book.description}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.genre.toLocaleUpperCase()}</td>
-                    <td className="py-4 px-6 text-sm text-gray-700">{book.borrowstatus}</td>
+                {paginatedData.map((data) => (
+                  <tr key={data.bookid} className="hover:bg-gray-200 dark:hover:bg-gray-200 hover:scale-99">
+                    <td className="py-4 px-6 text-md font-medium text-gray-700 ">{data.author}</td>
+                    <td className="py-4 px-6 text-md font-medium text-gray-700">{data.title}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700 w-2xl">{data.description}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{data.genre.toLocaleUpperCase()}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{data.isborrowed ? "Borrowed" : "Available"}</td>
+                    <td className="py-4 px-6 text-sm text-gray-700">{data.username || "-"}</td>
                     <td className="py-4 px-6 text-sm text-gray-700">
-                      <button className="cursor-pointer bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => navigate(`/books/update/${book.id}`)}>
+                      <button className="cursor-pointer bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => navigate(`/books/update/${data.bookid}`)}>
                         Update
                       </button>
-                      <button className="cursor-pointer bg-teal-500 hover:bg-teal  -700 text-white font-bold py-2 px-4 rounded-lg m-2">Borrow</button>
-                      <button className="cursor-pointer bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(book.id)}>
+                      <button className="cursor-pointer bg-teal-500 hover:bg-teal  -700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => handleBorrow(userID, data.bookid)}>
+                        Borrow
+                      </button>
+                      <button className="cursor-pointer bg-teal-500 hover:bg-teal  -700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => handleReturn(userID, data.userid, data.bookid)}>
+                        Return
+                      </button>
+                      <button className="cursor-pointer bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg m-2" onClick={() => deleteBooks(data.bookid)}>
                         Delete
                       </button>
                     </td>

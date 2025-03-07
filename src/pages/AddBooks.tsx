@@ -3,11 +3,13 @@ import { addBook } from "../services/api";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useAutoLogout from "../components/timeLogout";
 
 import Swal from "sweetalert2";
 import Navbar from "../components/Navbar";
 
 const AddBooks = () => {
+  useAutoLogout(6000000);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

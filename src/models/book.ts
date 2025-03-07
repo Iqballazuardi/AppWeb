@@ -1,8 +1,10 @@
 export interface Book {
-  id: number;
   title: string;
-  author: string;
   genre: string;
+  bookid: number;
+  userid: number;
+  author: string;
+  username: string;
+  isborrowed: boolean;
   description: string;
-  borrowstatus: string;
 }

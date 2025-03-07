@@ -117,4 +117,14 @@ export const borrowBook = async (data: { userId: number; bookId: number }) => {
   }
 };
 
+export const returnBook = async (data: { userId: number; bookId: number }) => {
+  try {
+    const response = await axiosInstance.put(`/books/return`, data);
+    return response.status;
+  } catch (error) {
+    console.error("Error returning book:", error);
+    throw error;
+  }
+};
+
 export default axiosInstance;
